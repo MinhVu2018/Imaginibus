@@ -30,7 +30,7 @@
                     android:layout_height="50dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/back_icon_black" />
+                    app:srcCompat="@drawable/icon_black_back" />
 
                 <Space
                     android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
                     android:layout_height="50dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/option_icon_black" />
+                    app:srcCompat="@drawable/icon_black_option" />
 
             </LinearLayout>
 
