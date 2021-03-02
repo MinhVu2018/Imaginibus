@@ -431,7 +431,7 @@
                                 android:clickable="true">
 
                                 <ImageButton
-                                    android:id="@+id/btn_more_camera"
+                                    android:id="@+id/btn_more_camera1"
                                     android:layout_width="100dp"
                                     android:layout_height="100dp"
                                     android:layout_margin="10dp"
