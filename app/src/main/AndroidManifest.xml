@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.imaginibus" >
+    package="com.example.imaginibus">
 
     <application
         android:allowBackup="true"
@@ -8,13 +8,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Imaginibus" >
-        <activity android:name=".PreviewImage" >
-        </activity>
+        android:theme="@style/Theme.Imaginibus">
+        <activity android:name=".Video" />
+        <activity android:name=".PreviewImage" />
         <activity android:name=".Location" />
         <activity android:name=".Favorite" />
         <activity android:name=".ByDate" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
