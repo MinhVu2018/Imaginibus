@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btn_secure = (ImageButton) findViewById(R.id.btn_secure);
         btn_secure.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ByDate.class);    // not yet
+                Intent intent = new Intent(MainActivity.this, SecureCode.class);
                 startActivity(intent);
             }
         });

@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Imaginibus">
-        <activity android:name=".SecureAlbum"></activity>
+        <activity android:name=".SecureCode"></activity>
+        <activity android:name=".EnterPassword" />
+        <activity android:name=".SecureAlbum" />
         <activity android:name=".SecureRegisterActivity" />
         <activity android:name=".Video" />
         <activity android:name=".PreviewImage" />
