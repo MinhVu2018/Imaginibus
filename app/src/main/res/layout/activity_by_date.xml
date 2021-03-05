@@ -121,8 +121,8 @@
                             android:layout_height="match_parent"
                             android:layout_margin="10dp">
 
-                            <ImageView
-                                android:id="@+id/imageView"
+                            <ImageButton
+                                android:id="@+id/img_01"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 android:layout_margin="10dp"

@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 
 public class ByDate extends AppCompatActivity {
-    ImageButton btn_back, btn_option;
+    ImageButton btn_back, btn_option, img_01;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
+        getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_by_date);
 
         SetUpButton();
@@ -30,6 +33,14 @@ public class ByDate extends AppCompatActivity {
         btn_option.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(ByDate.this, MainActivity.class);    // not yet
+                startActivity(intent);
+            }
+        });
+
+        img_01 = (ImageButton) findViewById(R.id.img_01);
+        img_01.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ByDate.this, ViewImage.class);
                 startActivity(intent);
             }
         });
