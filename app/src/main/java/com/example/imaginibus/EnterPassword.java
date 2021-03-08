@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 public class EnterPassword extends AppCompatActivity {
-
     ImageButton btn_back;
+    Button btn_next;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,15 @@ public class EnterPassword extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(EnterPassword.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_next = (Button) findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EnterPassword.this, SecureAlbum.class);
                 startActivity(intent);
             }
         });

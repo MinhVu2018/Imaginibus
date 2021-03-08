@@ -52,7 +52,7 @@
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/icon_black_option"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
 
             <LinearLayout

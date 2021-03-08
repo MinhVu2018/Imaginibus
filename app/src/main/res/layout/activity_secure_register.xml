@@ -59,6 +59,7 @@
             android:textStyle="italic"
             android:text="Set up an email to help you reset password when you forgot." />
         <Button
+            android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"

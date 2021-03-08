@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/btn_detail"
+        android:title="Xem thông tin"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_tag"
+        android:title="Gắn thẻ cho ảnh"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_secure"
+        android:title="Thêm/xóa khỏi mục an toàn"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_background"
+        android:title="Đặt làm ảnh nền"
+        app:showAsAction="ifRoom" />
+</menu>

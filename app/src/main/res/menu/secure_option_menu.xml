@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/btn_sync"
+        android:title="Đồng bộ"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_change_pass"
+        android:title="Đổi mật khẩu"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_camera"
+        android:title="Camera"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_language"
+        android:title="Ngôn ngữ"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/btn_language_viet"
+                android:title="Tiếng Việt" />
+            <item
+                android:id="@+id/btn_language_english"
+                android:title="Tiếng Anh" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/btn_theme"
+        android:title="Giao diện"
+        app:showAsAction="ifRoom" >
+        <menu>
+            <item
+                android:id="@+id/btn_theme_light"
+                android:title="Giao diện sáng" />
+            <item
+                android:id="@+id/btn_theme_dark"
+                android:title="Giao diện tối" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/btn_default"
+        android:title="Ứng dụng mặc định"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_layout"
+        android:title="Thay đổi layout"
+        app:showAsAction="ifRoom" />
+</menu>

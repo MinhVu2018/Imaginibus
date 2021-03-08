@@ -4,18 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
-public class ViewImage extends AppCompatActivity {
-    ImageButton btn_back;
+public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+    ImageButton btn_back, btn_option;
     ImageView img;
     float x1,x2,y1,y2;
     int ImgList[] = {R.drawable.ca_phe_review, R.drawable.bong_chuyen, R.drawable.da_lat, R.drawable.hoa_la, R.drawable.phan_thiet};
     int curImg = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,13 @@ public class ViewImage extends AppCompatActivity {
             public void onClick(View v){
                 Intent intent = new Intent(ViewImage.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btn_option = (ImageButton) findViewById(R.id.btn_option);
+        btn_option.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showPopup(v);
             }
         });
     }
@@ -57,6 +68,24 @@ public class ViewImage extends AppCompatActivity {
                 img.setImageResource(ImgList[curImg]);
                 break;
         }
+        return false;
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.view_option_menu);
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btn_sync:
+                Toast.makeText(this, "Sync clicked", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+
         return false;
     }
 }
