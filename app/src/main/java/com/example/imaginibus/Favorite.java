@@ -38,6 +38,7 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 showPopup(v);
             }
         });
+
     }
 
     public void showPopup(View v) {
@@ -53,6 +54,9 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
             case R.id.btn_sync:
                 Toast.makeText(this, "Sync clicked", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.btn_layout:
+                Intent intent = new Intent(Favorite.this, FavoriteLayoutA.class);
+                startActivity(intent);
         }
 
         return false;
