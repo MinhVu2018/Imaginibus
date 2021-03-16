@@ -4,49 +4,44 @@
 
     <item
         android:id="@+id/btn_sync"
-        android:title="Đồng bộ"
+        android:title="@string/btn_sync"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_change_pass"
-        android:title="Đổi mật khẩu"
+        android:title="@string/btn_change_pass"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_camera"
-        android:title="Camera"
+        android:title="@string/btn_camera"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_language"
-        android:title="Ngôn ngữ"
+        android:title="@string/btn_language"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/btn_language_viet"
-                android:title="Tiếng Việt" />
+                android:title="@string/btn_language_vn" />
             <item
                 android:id="@+id/btn_language_english"
-                android:title="Tiếng Anh" />
+                android:title="@string/btn_language_en" />
         </menu>
     </item>
 
     <item
         android:id="@+id/btn_theme"
-        android:title="Giao diện"
+        android:title="@string/btn_theme"
         app:showAsAction="ifRoom" >
         <menu>
             <item
                 android:id="@+id/btn_theme_light"
-                android:title="Giao diện sáng" />
+                android:title="@string/btn_theme_light" />
             <item
                 android:id="@+id/btn_theme_dark"
-                android:title="Giao diện tối" />
+                android:title="@string/btn_theme_dark" />
         </menu>
     </item>
-
-    <item
-        android:id="@+id/btn_default"
-        android:title="Ứng dụng mặc định"
-        app:showAsAction="ifRoom" />
 </menu>

@@ -27,18 +27,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
-            android:text="Welcome to" />
+            android:text="@string/welcome" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Secure Album"
+            android:text="@string/secure_title"
             android:textColor="#FF0707"
             android:textSize="40dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All photos and videos you move to this album will be secured with encrytion. You can only use your password to open it."
+            android:text="@string/intro"
             />
 
         <TextView
@@ -57,12 +57,12 @@
             android:layout_height="wrap_content"
             android:textSize="12dp"
             android:textStyle="italic"
-            android:text="Set up an email to help you reset password when you forgot." />
+            android:text="@string/register_hint" />
         <Button
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="NEXT" />
+            android:text="@string/btn_next" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

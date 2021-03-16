@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:text="Favorite Pictures"
+                android:text="@string/favorite_title"
                 android:textSize="40sp" />
 
             <LinearLayout
@@ -71,7 +71,7 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" images | " />
+                    android:text="@string/count_picture" />
 
                 <TextView
                     android:id="@+id/num_videos"

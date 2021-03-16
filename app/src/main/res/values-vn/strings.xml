@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Imaginibus</string>
+
+    <!--Text about title-->
+    <string name="by_date_title">Hình ảnh</string>
+    <string name="favorite_title">Yêu thích</string>
+    <string name="video_title">Video</string>
+    <string name="location_title">Địa điểm</string>
+    <string name="secure_title">Thu mục bảo mật</string>
+    <string name="count_picture">tập tin</string>
+
+    <!--Text on option menu-->
+    <string name="btn_sync">Đồng bộ</string>
+    <string name="btn_change_pass">Thay đổi mật khẩu</string>
+    <string name="btn_camera">Máy chụp hình</string>
+    <string name="btn_language">Thay đổi ngôn ngữ</string>
+    <string name="btn_language_vn">Tiếng Việt</string>
+    <string name="btn_language_en">Tiếng Anh</string>
+    <string name="btn_theme">Thay đổi giao diện</string>
+    <string name="btn_theme_dark">Giao diện tối</string>
+    <string name="btn_theme_light">Giao diện sáng</string>
+    <string name="btn_layout">Thay đổi layout</string>
+    <string name="btn_detail">Thông tin chi tiết</string>
+    <string name="btn_tag">Gắn thẻ</string>
+    <string name="btn_secure">Thêm xóa khỏi mục Bảo mật</string>
+    <string name="btn_background">Đặt làm ảnh nền</string>
+
+    <!--Text on secure album-->
+    <string name="login">Đăng nhập</string>
+    <string name="login_hint">Mã bảo mật đã được gửi đến email %s</string>
+    <string name="login_hint_one">Kiểm tra tài khoản email để nhận mã code.</string>
+    <string name="btn_resend">Gửi lại</string>
+    <string name="welcome">Chào mừng bạn đến với</string>
+    <string name="intro">Tất cả hình ảnh và video bạn đưa vào thư mục bảo mật sẽ được mã hóa. Bạn có thể đặt mật khẩu để mỡ khóa.</string>
+    <string name="register_hint">Thiết lập một email để tạo lại mật khẩu.</string>
+    <string name="btn_next">Tiếp theo</string>
+    <string name="enter_password">Nhập mật khẩu</string>
+    <string name="btn_submit">Hoàn thành</string>
+
+    <!--Text on view a picture-->
+    <string name="btn_share">Chia sẻ</string>
+    <string name="btn_edit">Chỉnh sửa</string>
+    <string name="btn_delete">Xóa</string>
+</resources>

@@ -31,7 +31,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:layout_marginStart="50dp"
         android:textSize="25sp"
         android:textColor="@color/white"
@@ -42,48 +42,59 @@
         android:id="@+id/login_noti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Access code was sent to yourmail@gmail.com.\nCheck the email to get the code"
+        android:text="@string/login_hint"
         android:layout_marginStart="50dp"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
 
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/login_hint_one"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
         android:ems="10"
         android:inputType="textPassword"
-        android:textSize="20sp"
         android:text="Password"
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_noti" />
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginStart="50dp"
-        app:layout_constraintTop_toBottomOf="@id/editPassword"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editPassword" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="15dp"
-        android:text="Resend"
-        android:textSize="20sp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="48dp"
         android:clickable="true"
+        android:text="@string/btn_resend"
+        android:textSize="20sp"
         android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@id/editPassword"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

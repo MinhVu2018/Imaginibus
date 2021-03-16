@@ -84,7 +84,7 @@
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share"
+                android:text="@string/btn_share"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"/>
@@ -109,7 +109,7 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit"
+                android:text="@string/btn_edit"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"/>
@@ -136,7 +136,7 @@
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
+                android:text="@string/btn_delete"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"/>

@@ -4,21 +4,21 @@
 
     <item
         android:id="@+id/btn_detail"
-        android:title="Xem thông tin"
+        android:title="@string/btn_detail"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_tag"
-        android:title="Gắn thẻ cho ảnh"
+        android:title="@string/btn_tag"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_secure"
-        android:title="Thêm/xóa khỏi mục an toàn"
+        android:title="@string/btn_secure"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/btn_background"
-        android:title="Đặt làm ảnh nền"
+        android:title="@string/btn_background"
         app:showAsAction="ifRoom" />
 </menu>

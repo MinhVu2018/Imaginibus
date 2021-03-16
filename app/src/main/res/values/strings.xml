@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">Imaginibus</string>
+
+    <!--Text about title-->
+    <string name="by_date_title">Pictures</string>
+    <string name="favorite_title">Favorite</string>
+    <string name="video_title">Video</string>
+    <string name="location_title">Location</string>
+    <string name="secure_title">Secure Album</string>
+    <string name="count_picture">item</string>
+
+    <!--Text on option menu-->
+    <string name="btn_sync">Sync</string>
+    <string name="btn_change_pass">Change password</string>
+    <string name="btn_camera">Camera</string>
+    <string name="btn_language">Change language</string>
+    <string name="btn_language_vn">Vietnamese</string>
+    <string name="btn_language_en">English</string>
+    <string name="btn_theme">Change theme</string>
+    <string name="btn_theme_dark">Dark Theme</string>
+    <string name="btn_theme_light">Light Theme</string>
+    <string name="btn_layout">Change Layout</string>
+    <string name="btn_detail">Detail</string>
+    <string name="btn_tag">Tag</string>
+    <string name="btn_secure">Add/remove from Secure</string>
+    <string name="btn_background">Set as Background</string>
+
+    <!--Text on secure album-->
+    <string name="login">Login</string>
+    <string name="login_hint">Access code was sent to %s</string>
+    <string name="login_hint_one">Check the email to get the code</string>
+    <string name="btn_resend">Resend</string>
+    <string name="welcome">Welcome to</string>
+    <string name="intro">All photos and videos you move to this album will be secured with encrytion. You can only use your password to open it.</string>
+    <string name="register_hint">Set up an email to help you reset password when you forgot.</string>
+    <string name="btn_next">Next</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="btn_submit">Submit</string>
+
+    <!--Text on view a picture-->
+    <string name="btn_share">Share</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_delete">Delete</string>
 </resources>
