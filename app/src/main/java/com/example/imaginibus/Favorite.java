@@ -2,7 +2,9 @@ package com.example.imaginibus;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -61,9 +63,11 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
         switch (item.getItemId()) {
             case R.id.btn_language_english:
                 setLocale("en-us");
+                saveLocale("en-us");
                 return true;
             case R.id.btn_language_viet:
                 setLocale("vn");
+                saveLocale("vn");
                 return true;
         }
         return false;
@@ -82,5 +86,12 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
         Intent refresh = new Intent(this, MainActivity.class);
         refresh.putExtra(currentLang, localeName);
         startActivity(refresh);
+    }
+
+    public void saveLocale(String language) {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("USER_LANGUAGE", language);
+        editor.commit();
     }
 }
