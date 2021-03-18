@@ -18,10 +18,8 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
-public class Location extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    ImageButton btn_back, btn_option;
-    Locale myLocale;
-    String currentLang;
+public class Location extends AppCompatActivity {
+    ImageButton btn_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,56 +39,5 @@ public class Location extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 startActivity(intent);
             }
         });
-
-        btn_option = (ImageButton) findViewById(R.id.btn_option);
-        btn_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showPopup(v);
-            }
-        });
-    }
-
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.main_option_menu);
-        popup.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.btn_language_english:
-                setLocale("en-us");
-                saveLocale("en-us");
-                return true;
-            case R.id.btn_language_viet:
-                setLocale("vn");
-                saveLocale("vn");
-                return true;
-        }
-        return false;
-    }
-
-    private void setLocale(String localeName) {
-        myLocale = new Locale(localeName);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        //finish current activity
-        finish();
-        //refresh activity
-        Intent refresh = new Intent(this, MainActivity.class);
-        refresh.putExtra(currentLang, localeName);
-        startActivity(refresh);
-    }
-
-    public void saveLocale(String language) {
-        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("USER_LANGUAGE", language);
-        editor.commit();
     }
 }

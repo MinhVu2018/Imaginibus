@@ -1,6 +1,7 @@
 package com.example.imaginibus;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,10 +27,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //load the saved
+        loadLanguage();
+        //will hide the title
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
-        getSupportActionBar().hide(); //hide the title bar
-        loadLanguage(); //load the saved language
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+        //load the content
         setContentView(R.layout.activity_main);
         SetUpButton();
     }
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.btn_language_english:
                 setLocale("en-us");
@@ -109,6 +114,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 setLocale("vn");
                 saveLocale("vn");
                 return true;
+            case R.id.btn_theme_dark:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                saveTheme(true);
+                break;
+            case R.id.btn_theme_light:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                saveTheme(false);
+                break;
         }
         return false;
     }
@@ -135,14 +148,36 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         editor.commit();
     }
 
+    public void saveTheme(Boolean theme) {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("NIGHT_MODE", theme);
+        editor.commit();
+    }
+
     private void loadLanguage(){
         SharedPreferences shp = getSharedPreferences(
                 "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
+
         String language = shp.getString("USER_LANGUAGE","");
+        Boolean theme = shp.getBoolean("NIGHT_MODE", false);
+
+        Configuration config = new Configuration();
+
+        if (theme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            config.uiMode = Configuration.UI_MODE_NIGHT_YES;
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            config.uiMode = Configuration.UI_MODE_NIGHT_NO;
+        }
+
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
-        Configuration config = new Configuration();
         config.locale = locale;
+
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
     }
 }
