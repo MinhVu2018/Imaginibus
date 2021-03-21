@@ -3,7 +3,7 @@ package com.example.imaginibus;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.LruCache;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +11,9 @@ import android.widget.ImageView;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,24 +21,10 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter {
     List<ImageModel> items = new ArrayList<>();
     Context context;
-    private final LruCache<String, Bitmap> cache;
 
     public ImageAdapter(@NonNull Context context, int resource, @NonNull List<ImageModel> objects) {
         this.context = context;
         items = objects;
-
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory;
-
-        cache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than number of items.
-                return bitmap.getRowBytes() / 1024;
-            }
-        };
     }
 
     public class ImageItemHolder extends RecyclerView.ViewHolder {
@@ -61,28 +45,22 @@ public class ImageAdapter extends RecyclerView.Adapter {
 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ImageModel item = items.get(position);
-        Bitmap myBitmap = getBitmapFromMemCache(item.getImageUrl());
-        if (myBitmap == null) {
-            myBitmap = BitmapFactory.decodeFile(item.getImageUrl());
-            addBitmapToMemoryCache(item.getImageUrl(), myBitmap);
-        }
-
         ImageItemHolder imageItemHolder = (ImageItemHolder) holder;
-        imageItemHolder.thumb.setImageBitmap(myBitmap);
+
+        //get width and height of image
+        String url = "file://" + item.getImageUrl();
+        Log.d("FILE_STRING", url);
+        Picasso.get()
+                .load(url)
+                .placeholder(R.drawable.gray_bg)
+                .error(R.drawable.gray_bg)
+                .centerCrop()
+                .fit()
+                .into(imageItemHolder.thumb);
     }
 
     public int getItemCount() {
         return items.size();
-    }
-
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            cache.put(key, bitmap);
-        }
-    }
-
-    public Bitmap getBitmapFromMemCache(String key) {
-        return cache.get(key);
     }
 
 }

@@ -47,6 +47,7 @@ public class ByDate extends AppCompatActivity {
         recycler = findViewById(R.id.list);
         ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list, imageList);
         recycler.setLayoutManager(new GridLayoutManager(this, 3));
+        recycler.addItemDecoration(new ImageListDecoration(1));
         recycler.setAdapter(imageAdapter);
     }
 
