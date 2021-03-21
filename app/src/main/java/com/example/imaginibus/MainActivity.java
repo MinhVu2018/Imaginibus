@@ -2,11 +2,15 @@ package com.example.imaginibus;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -24,11 +28,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     ImageButton btn_search, btn_option, btn_gallery, btn_video, btn_location, btn_favorite, btn_secure;
     Locale myLocale;
     String currentLang;
+    Boolean isSDPresent;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //load the saved
-        loadLanguage();
+        loadPreferences();
         //will hide the title
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -36,6 +43,23 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         //load the content
         setContentView(R.layout.activity_main);
         SetUpButton();
+
+        //require for reading external storage
+        if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+        //require for writing external storage
+        if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        //check for sd card
+        isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
     private void SetUpButton(){
@@ -155,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         editor.commit();
     }
 
-    private void loadLanguage(){
+    private void loadPreferences(){
         SharedPreferences shp = getSharedPreferences(
                 "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
 
