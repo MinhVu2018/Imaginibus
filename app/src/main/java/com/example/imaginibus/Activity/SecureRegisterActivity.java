@@ -1,4 +1,4 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+
+import com.example.imaginibus.R;
 
 public class SecureRegisterActivity extends AppCompatActivity {
     Button btn_regis;

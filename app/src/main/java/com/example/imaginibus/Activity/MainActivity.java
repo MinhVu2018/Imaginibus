@@ -1,4 +1,4 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -20,7 +20,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.Toast;
+
+import com.example.imaginibus.R;
 
 import java.util.Locale;
 
@@ -64,12 +65,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private void SetUpButton(){
         btn_search = (ImageButton) findViewById(R.id.btn_search);
-        btn_search.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PreviewImage dialog = new PreviewImage();
-                dialog.show(getSupportFragmentManager(), "show preview image");
-            }
-        });
 
         btn_option = (ImageButton) findViewById(R.id.btn_option);
         btn_option.setOnClickListener(new View.OnClickListener() {

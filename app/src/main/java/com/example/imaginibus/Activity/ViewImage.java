@@ -1,4 +1,4 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import com.example.imaginibus.R;
 
 public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;

@@ -1,4 +1,4 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Model;
 
 public class ImageModel {
     private String url;

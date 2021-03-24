@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/password_wallpaper"
-    tools:context=".SecureCode">
+    tools:context=".Activity.SecureCode">
 
     <ImageButton
         android:id="@+id/btn_back"

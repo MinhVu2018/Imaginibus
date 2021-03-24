@@ -1,9 +1,11 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.Window;
+
+import com.example.imaginibus.R;
 
 public class FavoriteLayoutA extends AppCompatActivity {
 

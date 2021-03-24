@@ -17,18 +17,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Imaginibus">
-        <activity android:name=".FavoriteLayoutA"></activity>
-        <activity android:name=".ViewImage" />
-        <activity android:name=".SecureCode" />
-        <activity android:name=".EnterPassword" />
-        <activity android:name=".SecureAlbum" />
-        <activity android:name=".SecureRegisterActivity" />
-        <activity android:name=".Video" />
+        <activity android:name=".Activity.FavoriteLayoutA"></activity>
+        <activity android:name=".Activity.ViewImage" />
+        <activity android:name=".Activity.SecureCode" />
+        <activity android:name=".Activity.EnterPassword" />
+        <activity android:name=".Activity.SecureAlbum" />
+        <activity android:name=".Activity.SecureRegisterActivity" />
+        <activity android:name=".Activity.Video" />
         <activity android:name=".PreviewImage" />
-        <activity android:name=".Location" />
-        <activity android:name=".Favorite" />
-        <activity android:name=".ByDate" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.Location" />
+        <activity android:name=".Activity.Favorite" />
+        <activity android:name=".Activity.ByDate" />
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
