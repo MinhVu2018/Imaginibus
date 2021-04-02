@@ -2,8 +2,8 @@ package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,14 +13,19 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
+    List<ImageModel> listImage;
     ImageView img;
     float x1,x2,y1,y2;
-    int ImgList[] = {R.drawable.ca_phe_review, R.drawable.bong_chuyen, R.drawable.da_lat, R.drawable.hoa_la, R.drawable.phan_thiet};
-    int curImg = 0;
+    int cur_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,23 @@ public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItem
         getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_view_image);
 
+        //set the current image
+        img = (ImageView) findViewById(R.id.viewed_image);
+        String img_path = getIntent().getStringExtra("img_path");
+        Picasso.get()
+                .load(img_path)
+                .placeholder(R.drawable.gray_bg)
+                .error(R.drawable.gray_bg)
+                .into(img);
+
+        //find the current image position
+        listImage = (List<ImageModel>) getIntent().getSerializableExtra("list_img");
+        for (cur_img = 0; cur_img<listImage.size(); cur_img++) {
+            if (("file://" + listImage.get(cur_img).getImageUrl()).equals(img_path))
+                return;
+        }
+
+        //setup buttons
         SetUpButton();
     }
 
@@ -36,8 +58,7 @@ public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItem
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent(ViewImage.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -60,14 +81,20 @@ public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItem
                 x2 = touchEvent.getX();
                 y2 = touchEvent.getY();
                 if (x1 < x2){
-                    if (curImg > 0)
-                        curImg--;
+                    if (cur_img > 0)
+                        cur_img--;
                 }
                 else if (x1 > x2){
-                    if (curImg < ImgList.length-1)
-                        curImg++;
+                    if (cur_img < (listImage.size() - 1))
+                        cur_img++;
                 }
-                img.setImageResource(ImgList[curImg]);
+
+                Log.i("POSITION", String.valueOf(cur_img));
+                Picasso.get()
+                        .load("file://" + listImage.get(cur_img).getImageUrl())
+                        .placeholder(R.drawable.gray_bg)
+                        .error(R.drawable.gray_bg)
+                        .into(img);
                 break;
         }
         return false;

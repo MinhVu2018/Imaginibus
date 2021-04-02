@@ -1,6 +1,7 @@
 package com.example.imaginibus.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,17 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.imaginibus.Activity.ViewImage;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter {
-    List<ImageModel> items= new ArrayList<>();
+    List<ImageModel> items;
     Context context;
 
     public ImageAdapter(@NonNull Context context, int resource, @NonNull List<ImageModel> objects) {
@@ -33,6 +36,17 @@ public class ImageAdapter extends RecyclerView.Adapter {
         private ImageItemHolder(View view) {
             super(view);
             thumb = (ImageView) view.findViewById(R.id.image);
+
+            thumb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ViewImage.class);
+                    intent.putExtra("img_path", thumb.getTag().toString());
+                    intent.putExtra("list_img", (Serializable) items);
+
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -47,8 +61,7 @@ public class ImageAdapter extends RecyclerView.Adapter {
         ImageModel item = items.get(position);
         ImageItemHolder imageItemHolder = (ImageItemHolder) holder;
 
-
-        //get width and height of image
+        //file the path of image
         String url = "file://" + item.getImageUrl();
         Log.d("FILE_STRING", url);
         Picasso.get()
@@ -58,6 +71,9 @@ public class ImageAdapter extends RecyclerView.Adapter {
                 .centerCrop()
                 .fit()
                 .into(imageItemHolder.thumb);
+
+        //add the path value as tag
+        imageItemHolder.thumb.setTag(url);
     }
 
     public int getItemCount() {

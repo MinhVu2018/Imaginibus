@@ -13,16 +13,25 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
@@ -61,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //check for sd card
         isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+
+        //get all image and set to global variable
+        ((MyApplication) this.getApplication()).setListImagePath(externalReadImage());
     }
 
     private void SetUpButton(){
@@ -197,6 +209,44 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         config.locale = locale;
 
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+    }
 
+    private List<ImageModel> externalReadImage() {
+        //create list
+        List<ImageModel> imageList = new ArrayList<>();
+
+        final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED };
+        final String orderBy = MediaStore.Images.Media.DATE_ADDED;
+        //Stores all the images from the gallery in Cursor
+        Cursor cursor = getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
+                null, orderBy);
+        //Total number of images
+        int count = cursor.getCount();
+        //Date format
+        String format = "MM-dd-yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.ENGLISH);
+
+        for (int i = 0; i < count; i++) {
+            cursor.moveToPosition(i);
+            int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            int dateColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+
+            String dateTaken = cursor.getString(dateColumnIndex);
+            Log.i("DATE", dateTaken);
+            String date = formatter.format(new Date(Long.parseLong(dateTaken) * 1000L));
+
+            //Store the path of the image
+            ImageModel imageModel = new ImageModel();
+            imageModel.setImage(cursor.getString(dataColumnIndex), date);
+
+
+            imageList.add(0, imageModel);
+        }
+
+        // The cursor should be freed up after use with close()
+        cursor.close();
+
+        return imageList;
     }
 }
