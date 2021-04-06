@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,13 +23,18 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Adapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
+import com.example.imaginibus.Adapter.ListAlbumAdapter;
+import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     Locale myLocale;
     String currentLang;
     Boolean isSDPresent;
+    RecyclerView listAlbum;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
@@ -72,7 +80,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 
         //get all image and set to global variable
-        ((MyApplication) this.getApplication()).setListImagePath(externalReadImage());
+        externalReadImage();
+
+        //set list album
+        listAlbum = (RecyclerView) findViewById(R.id.list_album);
+        ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
+        listAlbum.setLayoutManager(new LinearLayoutManager(this));
+        listAlbum.setAdapter(listAlbumAdapter);
+
     }
 
     private void SetUpButton(){
@@ -211,11 +226,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
-    private List<ImageModel> externalReadImage() {
+    private void externalReadImage() {
         //create list
         List<ImageModel> imageList = new ArrayList<>();
+        List<AlbumModel> albumList = new ArrayList<>();
 
-        final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED };
+        final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
         final String orderBy = MediaStore.Images.Media.DATE_ADDED;
         //Stores all the images from the gallery in Cursor
         Cursor cursor = getContentResolver().query(
@@ -231,22 +247,42 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             cursor.moveToPosition(i);
             int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
             int dateColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+            int albumColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
+            //calculate the date taken
             String dateTaken = cursor.getString(dateColumnIndex);
-            Log.i("DATE", dateTaken);
             String date = formatter.format(new Date(Long.parseLong(dateTaken) * 1000L));
-
+            //get album name
+            String album = cursor.getString(albumColumnIndex);
             //Store the path of the image
             ImageModel imageModel = new ImageModel();
-            imageModel.setImage(cursor.getString(dataColumnIndex), date);
+            imageModel.setImage(cursor.getString(dataColumnIndex), date, album);
 
-
+            //add that image to list image
             imageList.add(0, imageModel);
+            //add image to album
+            addImageToAlbum(albumList, imageModel, album);
         }
 
         // The cursor should be freed up after use with close()
         cursor.close();
 
-        return imageList;
+        //set to application variable
+        ((MyApplication) this.getApplication()).setListImage(imageList);
+        ((MyApplication) this.getApplication()).setListAlbum(albumList);
+    }
+
+    private void addImageToAlbum(List<AlbumModel> listAlbum, ImageModel image, String albumName) {
+        int albumSize = listAlbum.size();
+        for (int i = 0; i < albumSize; i++) {
+            if (listAlbum.get(i).getAlbumName().equals(albumName)) {
+                listAlbum.get(i).addImage(image);
+                return;
+            }
+        }
+
+        AlbumModel newAlbum = new AlbumModel(image, albumName);
+        listAlbum.add(newAlbum);
+        return;
     }
 }

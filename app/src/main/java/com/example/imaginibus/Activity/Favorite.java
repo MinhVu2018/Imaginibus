@@ -1,6 +1,8 @@
 package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,11 +11,19 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
+import com.example.imaginibus.Adapter.ImageAdapter;
+import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
+
+import java.util.List;
 
 public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
+    TextView title, num_img;
+    RecyclerView listImageView;
+    List<ImageModel> listImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +31,23 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_favorite);
+
+        //find view
+        title = findViewById(R.id.title);
+        listImageView = findViewById(R.id.list_image);
+        num_img = findViewById(R.id.num_images);
+
+        //setup the title if it is an album
+        if (getIntent().hasExtra("Title")) {
+            title.setText(getIntent().getStringExtra("Title"));
+
+            listImage = (List<ImageModel>) getIntent().getSerializableExtra("List Image");
+            listImageView.setLayoutManager(new GridLayoutManager(this, 3));
+            ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
+            listImageView.setAdapter(imageAdapter);
+            num_img.setText(String.valueOf(listImage.size()));
+        }
+
 
         SetUpButton();
     }

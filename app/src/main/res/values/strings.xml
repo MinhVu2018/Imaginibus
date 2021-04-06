@@ -7,7 +7,7 @@
     <string name="video_title">Video</string>
     <string name="location_title">Location</string>
     <string name="secure_title">Secure Album</string>
-    <string name="count_picture">item</string>
+    <string name="count_picture"> item</string>
 
     <!--Text on option menu-->
     <string name="btn_sync">Sync</string>
