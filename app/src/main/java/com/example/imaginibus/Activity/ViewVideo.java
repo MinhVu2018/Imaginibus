@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.imaginibus.Model.ImageModel;
@@ -19,10 +21,10 @@ import com.example.imaginibus.R;
 
 import java.util.List;
 
-public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class ViewVideo extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
     List<ImageModel> listImage;
-    ImageView img;
+    VideoView videoView;
     float x1,x2,y1,y2;
     int cur_img;
 
@@ -31,24 +33,16 @@ public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItem
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide(); //hide the title bar
-        setContentView(R.layout.activity_view_image);
+        setContentView(R.layout.activity_view_video);
 
-        //set the current image
-        img = (ImageView) findViewById(R.id.viewed_image);
-        String img_path = getIntent().getStringExtra("img_path");
-        Glide.with(this)
-                .load(img_path)
-                .placeholder(R.drawable.gray_bg)
-                .error(R.drawable.gray_bg)
-                .into(img);
-
-        //find the current image position
-        listImage = (List<ImageModel>) getIntent().getSerializableExtra("list_img");
-        for (cur_img = 0; cur_img<listImage.size(); cur_img++) {
-            if (("file://" + listImage.get(cur_img).getImageUrl()).equals(img_path))
-                return;
-        }
-
+        //set the current video
+        videoView = (VideoView) findViewById(R.id.view_video);
+        String video_path = getIntent().getStringExtra("video_path");
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+        videoView.setVideoPath(video_path);
+        videoView.start();
         //setup buttons
         SetUpButton();
     }
@@ -67,36 +61,6 @@ public class ViewImage extends AppCompatActivity implements PopupMenu.OnMenuItem
                 showPopup(v);
             }
         });
-    }
-
-    public boolean onTouchEvent(MotionEvent touchEvent){
-        img = (ImageView) findViewById(R.id.viewed_image);
-        switch (touchEvent.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                x1 = touchEvent.getX();
-                y1 = touchEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = touchEvent.getX();
-                y2 = touchEvent.getY();
-                if (x1 < x2){
-                    if (cur_img > 0)
-                        cur_img--;
-                }
-                else if (x1 > x2){
-                    if (cur_img < (listImage.size() - 1))
-                        cur_img++;
-                }
-
-                Log.i("POSITION", String.valueOf(cur_img));
-                Glide.with(this)
-                        .load("file://" + listImage.get(cur_img).getImageUrl())
-                        .placeholder(R.drawable.gray_bg)
-                        .error(R.drawable.gray_bg)
-                        .into(img);
-                break;
-        }
-        return false;
     }
 
     public void showPopup(View v) {

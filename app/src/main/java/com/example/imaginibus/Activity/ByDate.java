@@ -35,7 +35,7 @@ public class ByDate extends AppCompatActivity {
         recycler.setAdapter(imageAdapter);
         //set number image
         num_image = findViewById(R.id.num_images);
-        num_image.setText(String.valueOf(((MyApplication) this.getApplication()).getListImageSize()));
+        num_image.setText(String.valueOf(((MyApplication) this.getApplication()).getListImageSize()) + " ");
     }
 
 //    private void internalReadImage() {

@@ -45,7 +45,7 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
             listImageView.setLayoutManager(new GridLayoutManager(this, 3));
             ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
             listImageView.setAdapter(imageAdapter);
-            num_img.setText(String.valueOf(listImage.size()));
+            num_img.setText(String.valueOf(listImage.size()) + " ");
         }
 
 

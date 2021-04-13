@@ -12,12 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.imaginibus.Activity.Favorite;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
@@ -79,30 +78,28 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
 
         listAlbumHolder.albumName.setText(item.getAlbumName());
         //set the first image (always correct)
-        Picasso.get()
+        Glide.with(context)
                 .load("file://" + listImage.get(0).getImageUrl())
                 .placeholder(R.drawable.gray_bg)
                 .error(R.drawable.gray_bg)
                 .centerCrop()
-                .fit()
                 .into(listAlbumHolder.demoImg1);
+
         //check for the second
         if (listImage.size() >= 2) {
-            Picasso.get()
+            Glide.with(context)
                     .load("file://" + listImage.get(1).getImageUrl())
                     .placeholder(R.drawable.gray_bg)
                     .error(R.drawable.gray_bg)
                     .centerCrop()
-                    .fit()
                     .into(listAlbumHolder.demoImg2);
 
             if (listImage.size() >= 3) {
-                Picasso.get()
+                Glide.with(context)
                         .load("file://" + listImage.get(2).getImageUrl())
                         .placeholder(R.drawable.gray_bg)
                         .error(R.drawable.gray_bg)
                         .centerCrop()
-                        .fit()
                         .into(listAlbumHolder.demoImg3);
             }
         } else {

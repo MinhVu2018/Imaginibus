@@ -11,21 +11,21 @@
 
     <application
         android:name=".MyApplication"
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Imaginibus">
-        <activity android:name=".Activity.FavoriteLayoutA"></activity>
+        <activity android:name=".Activity.ViewVideo"></activity>
+        <activity android:name=".Activity.FavoriteLayoutA" />
         <activity android:name=".Activity.ViewImage" />
         <activity android:name=".Activity.SecureCode" />
         <activity android:name=".Activity.EnterPassword" />
         <activity android:name=".Activity.SecureAlbum" />
         <activity android:name=".Activity.SecureRegisterActivity" />
         <activity android:name=".Activity.Video" />
-        <activity android:name=".PreviewImage" />
         <activity android:name=".Activity.Location" />
         <activity android:name=".Activity.Favorite" />
         <activity android:name=".Activity.ByDate" />

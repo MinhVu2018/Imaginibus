@@ -1,19 +1,36 @@
 package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import com.example.imaginibus.Adapter.VideoAdapter;
+import com.example.imaginibus.Model.AlbumModel;
+import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.Model.VideoModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
+    RecyclerView listVideoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +39,16 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_video);
 
+        //load video
+        externalReadVideo();
+
+        //load id
+        listVideoView = findViewById(R.id.list_video);
+        listVideoView.setLayoutManager(new GridLayoutManager(this, 3));
+        VideoAdapter videoAdapter = new VideoAdapter(this, R.id.list_video, ((MyApplication) this.getApplication()).getListVideo());
+        listVideoView.setAdapter(videoAdapter);
+
+        //setup button
         SetUpButton();
     }
 
@@ -54,4 +81,34 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         return false;
     }
 
+    private void externalReadVideo() {
+        //create list
+        List<VideoModel> listVideo = new ArrayList<>();
+
+        final String[] columns = { MediaStore.Video.Media.DATA, MediaStore.Video.Media.DATE_ADDED };
+        final String orderBy = MediaStore.Video.Media.DATE_ADDED;
+        //Stores all the images from the gallery in Cursor
+        Cursor cursor = getContentResolver().query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null,
+                null, orderBy);
+        //Total number of images
+        int count = cursor.getCount();
+
+        for (int i = 0; i < count; i++) {
+            cursor.moveToPosition(i);
+            int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+            //Store the path of the image
+            VideoModel videoModel = new VideoModel(cursor.getString(dataColumnIndex));
+
+            //add that image to list image
+            listVideo.add(0, videoModel);
+        }
+
+        // The cursor should be freed up after use with close()
+        cursor.close();
+
+        //set to application variable
+        ((MyApplication) this.getApplication()).setListVideo(listVideo);
+    }
 }

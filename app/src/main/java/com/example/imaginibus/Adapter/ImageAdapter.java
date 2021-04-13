@@ -2,7 +2,6 @@ package com.example.imaginibus.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.imaginibus.Activity.ViewImage;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter {
@@ -63,13 +61,12 @@ public class ImageAdapter extends RecyclerView.Adapter {
 
         //file the path of image
         String url = "file://" + item.getImageUrl();
-        Log.d("FILE_STRING", url);
-        Picasso.get()
+
+        Glide.with(context)
                 .load(url)
                 .placeholder(R.drawable.gray_bg)
                 .error(R.drawable.gray_bg)
                 .centerCrop()
-                .fit()
                 .into(imageItemHolder.thumb);
 
         //add the path value as tag
