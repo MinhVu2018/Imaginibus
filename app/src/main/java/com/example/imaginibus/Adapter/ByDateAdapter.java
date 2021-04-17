@@ -18,6 +18,7 @@ import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ByDateAdapter extends RecyclerView.Adapter {
@@ -81,5 +82,7 @@ public class ByDateAdapter extends RecyclerView.Adapter {
             temp.add(item);
             Log.i("DAY", curDay);
         }
+
+        Collections.reverse(temp);
     }
 }

@@ -19,6 +19,7 @@ import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 public class ListAlbumAdapter extends RecyclerView.Adapter {
@@ -75,6 +76,8 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
         AlbumModel item = items.get(position);
         ListAlbumHolder listAlbumHolder = (ListAlbumHolder) holder;
         List<ImageModel> listImage = item.getListImage();
+
+        Collections.reverse(listImage);
 
         listAlbumHolder.albumName.setText(item.getAlbumName());
         //set the first image (always correct)

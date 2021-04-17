@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,19 +17,13 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Adapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import com.example.imaginibus.Adapter.ListAlbumAdapter;
@@ -40,8 +32,6 @@ import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,8 +46,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerView listAlbum;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
-    Dialog MyDialog;
-    Uri image_uri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //load the saved
@@ -147,6 +136,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 startActivity(intent);
             }
         });
+
+//        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+//        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                refresh(); // your code
+//                pullToRefresh.setRefreshing(false);
+//            }
+//        });
     }
 
     public void showPopup(View v) {
@@ -176,13 +174,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 saveTheme(false);
                 break;
             case R.id.btn_camera:
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New picture");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
-                image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
                 Intent intent = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
                 startActivityForResult(intent, 1001);
                 break;
             default:
@@ -194,12 +186,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        refresh();
+    }
 
-        // create dialog
-        MyDialog = new Dialog(MainActivity.this);
-        MyDialog.setContentView(R.layout.preview_image);
-        ImageView img_preview = findViewById(R.id.image_preview);
-        img_preview.setImageURI(image_uri);
+    public void refresh(){
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
     }
 
     public void setLocale(String localeName) {
