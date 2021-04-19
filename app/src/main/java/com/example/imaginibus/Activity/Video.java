@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.example.imaginibus.Adapter.VideoAdapter;
 import com.example.imaginibus.Model.AlbumModel;
@@ -31,6 +32,7 @@ import java.util.Locale;
 public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
     RecyclerView listVideoView;
+    TextView numVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         listVideoView.setLayoutManager(new GridLayoutManager(this, 3));
         VideoAdapter videoAdapter = new VideoAdapter(this, R.id.list_video, ((MyApplication) this.getApplication()).getListVideo());
         listVideoView.setAdapter(videoAdapter);
+        numVideo = findViewById(R.id.num_videos);
+        numVideo.setText(String.valueOf(((MyApplication) this.getApplication()).getListVideo().size()) + " ");
 
         //setup button
         SetUpButton();

@@ -23,10 +23,7 @@ import java.util.List;
 
 public class ViewVideo extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
-    List<ImageModel> listImage;
     VideoView videoView;
-    float x1,x2,y1,y2;
-    int cur_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
