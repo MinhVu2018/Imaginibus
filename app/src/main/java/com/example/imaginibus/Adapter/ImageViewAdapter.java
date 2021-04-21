@@ -1,20 +1,29 @@
 package com.example.imaginibus.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.imaginibus.Activity.ViewImage;
 import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 import com.example.imaginibus.View.TouchImageView;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageViewAdapter extends PagerAdapter {
     private Context context;

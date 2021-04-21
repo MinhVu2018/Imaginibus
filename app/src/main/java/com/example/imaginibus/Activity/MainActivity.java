@@ -31,7 +31,10 @@ import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     String currentLang;
     Boolean isSDPresent;
     RecyclerView listAlbum;
+    Gson gson = new Gson();
+
+    //Static number for request permission
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
@@ -231,6 +237,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
+        String fav_list = shp.getString("FAVORITE_LIST", null);
+        if (fav_list != null) {
+            Type type = new TypeToken<List<ImageModel>>(){}.getType();
+            ((MyApplication) this.getApplication()).setListFavorite(gson.fromJson(fav_list, type));
+        } else {
+            ((MyApplication) this.getApplication()).setListFavorite(new ArrayList<>());
+        }
 
         Configuration config = new Configuration();
 

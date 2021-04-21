@@ -31,6 +31,8 @@ android {
 dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    //gson to save object to sharedreferences
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'

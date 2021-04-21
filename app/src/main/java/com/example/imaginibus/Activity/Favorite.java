@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.imaginibus.Adapter.ImageAdapter;
 import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 
 import java.util.List;
@@ -46,9 +47,16 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
             ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
             listImageView.setAdapter(imageAdapter);
             num_img.setText(String.valueOf(listImage.size()) + " ");
+        } else {
+            if (((MyApplication) this.getApplication()).getListFavorite().size() > 0) {
+                listImageView.setLayoutManager(new GridLayoutManager(this, 3));
+                ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, ((MyApplication) this.getApplication()).getListFavorite());
+                listImageView.setAdapter(imageAdapter);
+            }
+            num_img.setText(String.valueOf(((MyApplication) this.getApplication()).getListFavorite().size()) + " ");
         }
 
-
+        //set up the buttons
         SetUpButton();
     }
 

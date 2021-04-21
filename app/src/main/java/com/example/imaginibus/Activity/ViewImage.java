@@ -3,18 +3,24 @@ package com.example.imaginibus.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.imaginibus.Adapter.ImageViewAdapter;
 import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -23,6 +29,7 @@ public class ViewImage extends AppCompatActivity {
     ArrayList<ImageModel> listImage;
     ImageViewAdapter imageAdapter;
     int cur_img;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +48,12 @@ public class ViewImage extends AppCompatActivity {
             if (("file://" + listImage.get(cur_img).getImageUrl()).equals(img_path))
                 break;
         }
+
+        //setup image adapter
         setUp();
+
+        //setup button
+        setupButton();
     }
 
     public void setUp(){
@@ -56,20 +68,37 @@ public class ViewImage extends AppCompatActivity {
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                cur_img = position;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
+    }
 
+    public void setupButton() {
+        ImageButton btn_favorite = findViewById(R.id.btn_like);
+        btn_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageModel image = listImage.get(cur_img);
+                if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(image)) {
+                    Toast.makeText(ViewImage.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
+                    ((MyApplication) ViewImage.this.getApplicationContext()).removeImageFromFavorite(image);
+                } else {
+                    Toast.makeText(ViewImage.this.getApplicationContext(), "Add image to favorite!", Toast.LENGTH_SHORT).show();
+                    ((MyApplication) ViewImage.this.getApplicationContext()).addImageToFavorite(image);
+                }
+
+                //save to my application and sharedreferences
+                saveListFavorite(((MyApplication) ViewImage.this.getApplicationContext()).getListFavorite());
+            }
+        });
         // set up buttons
         ImageButton btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> finish());
@@ -119,6 +148,15 @@ public class ViewImage extends AppCompatActivity {
         popup.setOnMenuItemClickListener(this::onMenuItemClick);
         popup.inflate(R.menu.view_option_menu);
         popup.show();
+    }
+    
+    private void saveListFavorite(List<ImageModel> items) {
+        //SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        editor.putString("FAVORITE_LIST", gson.toJson(items));
+        editor.commit();
     }
 
     public boolean onMenuItemClick(MenuItem item) {
