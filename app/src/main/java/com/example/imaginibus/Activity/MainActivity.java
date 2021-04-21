@@ -105,15 +105,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        btn_video = (ImageButton) findViewById(R.id.btn_video);
+        btn_video = findViewById(R.id.btn_video);
         btn_video.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Video.class);    // not yet
+                Intent intent = new Intent(MainActivity.this, Video.class);
                 startActivity(intent);
             }
         });
 
-        btn_location = (ImageButton) findViewById(R.id.btn_location);
+        btn_location = findViewById(R.id.btn_location);
         btn_location.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Location.class);
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        btn_favorite = (ImageButton) findViewById(R.id.btn_favorite);
+        btn_favorite = findViewById(R.id.btn_favorite);
         btn_favorite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Favorite.class);
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        btn_secure = (ImageButton) findViewById(R.id.btn_secure);
+        btn_secure = findViewById(R.id.btn_secure);
         btn_secure.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SecureRegisterActivity.class);

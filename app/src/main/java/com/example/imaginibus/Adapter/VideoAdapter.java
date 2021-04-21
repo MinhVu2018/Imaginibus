@@ -48,7 +48,7 @@ public class VideoAdapter extends RecyclerView.Adapter {
         public void onClick(View v) {
             Intent intent = new Intent(context, ViewVideo.class);
             intent.putExtra("video_path", imageView.getTag().toString());
-
+            intent.putExtra("list_vid", (Serializable)items);
             context.startActivity(intent);
         }
     }

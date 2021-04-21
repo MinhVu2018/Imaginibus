@@ -2,10 +2,8 @@ package com.example.imaginibus.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -18,12 +16,12 @@ import com.example.imaginibus.View.TouchImageView;
 
 import java.util.ArrayList;
 
-public class ImgAdapter extends PagerAdapter {
+public class ImageViewAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<ImageModel> modelArrayList;
 
     //constructor
-    public ImgAdapter(Context ct, ArrayList<ImageModel> arr){
+    public ImageViewAdapter(Context ct, ArrayList<ImageModel> arr){
         this.context = ct;
         this.modelArrayList = arr;
     }
@@ -41,16 +39,11 @@ public class ImgAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        // inflate layout item.xml
-        View view = LayoutInflater.from(context).inflate(R.layout.item, container, false);
+        // inflate layout item_image.xml
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image, container, false);
 
         // init uid views from item.xml
         TouchImageView img = view.findViewById(R.id.view_image);
-        LinearLayout header = view.findViewById(R.id.image_header);
-        LinearLayout footer = view.findViewById(R.id.image_footer);
-
-        // show/hide layout
-
 
         // get data
         ImageModel model = modelArrayList.get(position);
@@ -73,4 +66,5 @@ public class ImgAdapter extends PagerAdapter {
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
     }
+
 }

@@ -1,6 +1,8 @@
 package com.example.imaginibus.Model;
 
-public class VideoModel {
+import java.io.Serializable;
+
+public class VideoModel implements Serializable {
     private String path;
 
     public VideoModel(String path) {

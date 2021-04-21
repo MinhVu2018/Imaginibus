@@ -53,7 +53,7 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
     }
 
     private void SetUpButton() {
-        btn_back = (ImageButton) findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Video.this, MainActivity.class);
@@ -61,7 +61,7 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
             }
         });
 
-        btn_option = (ImageButton) findViewById(R.id.btn_option);
+        btn_option = findViewById(R.id.btn_option);
         btn_option.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showPopup(v);
