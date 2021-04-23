@@ -17,9 +17,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +36,7 @@ import com.example.imaginibus.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -275,9 +278,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                 MediaStore.Audio.Media.HEIGHT,
                                 MediaStore.Audio.Media.TITLE,
                                 MediaStore.Audio.Media.BUCKET_DISPLAY_NAME,
-                                MediaStore.Audio.Media.DISPLAY_NAME
-                                MediaStore.Images.Media.LATITUDE,
-                                MediaStore.Images.Media.LONGITUDE};
+                                MediaStore.Audio.Media.DISPLAY_NAME};
 
         final String orderBy = MediaStore.Images.Media.DATE_ADDED;
         //Stores all the images from the gallery in Cursor
@@ -296,6 +297,33 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
             ImageModel imageModel = new ImageModel(data);
 
+            //get image lat and long
+            ExifInterface exif = null;
+            double latitude = 0, longitude = 0;
+            try {
+                exif = new ExifInterface(imageModel.getImageUrl());
+                String LATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                String LATITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                String LONGITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                String LONGITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+
+                // your Final lat Long Values
+                if((LATITUDE !=null) && (LATITUDE_REF !=null) && (LONGITUDE != null) && (LONGITUDE_REF !=null)) {
+                    if(LATITUDE_REF.equals("N"))
+                        latitude = convertToDegree(LATITUDE);
+                    else
+                        latitude = 0 - convertToDegree(LATITUDE);
+
+                    if(LONGITUDE_REF.equals("E"))
+                        longitude = convertToDegree(LONGITUDE);
+                    else
+                        longitude = 0 - convertToDegree(LONGITUDE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            imageModel.setImageLocation(latitude, longitude);
             //add that image to list image
             imageList.add(0, imageModel);
             //add image to album
@@ -323,4 +351,28 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         listAlbum.add(newAlbum);
         return;
     }
+
+    private double convertToDegree(String stringDMS){
+        Float result = null;
+        String[] DMS = stringDMS.split(",", 3);
+
+        String[] stringD = DMS[0].split("/", 2);
+        Double D0 = new Double(stringD[0]);
+        Double D1 = new Double(stringD[1]);
+        Double FloatD = D0/D1;
+
+        String[] stringM = DMS[1].split("/", 2);
+        Double M0 = new Double(stringM[0]);
+        Double M1 = new Double(stringM[1]);
+        Double FloatM = M0/M1;
+
+        String[] stringS = DMS[2].split("/", 2);
+        Double S0 = new Double(stringS[0]);
+        Double S1 = new Double(stringS[1]);
+        Double FloatS = S0/S1;
+
+        result = new Float(FloatD + (FloatM/60) + (FloatS/3600));
+
+        return result;
+    };
 }
