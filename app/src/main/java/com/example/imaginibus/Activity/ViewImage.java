@@ -1,6 +1,7 @@
 package com.example.imaginibus.Activity;
 
 import androidx.annotation.RequiresApi;
+import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -36,7 +37,7 @@ public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
     ArrayList<ImageModel> listImage;
     ImageViewAdapter imageAdapter;
-    int cur_img_position_position;
+    int cur_img_position;
     ImageModel cur_img;
 
     @Override
@@ -52,11 +53,11 @@ public class ViewImage extends AppCompatActivity {
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
 
         String img_path = getIntent().getStringExtra("img_path");
-        for (cur_img_position_position = 0; cur_img_position_position<listImage.size(); cur_img_position_position++) {
-            if (("file://" + listImage.get(cur_img_position_position).getImageUrl()).equals(img_path))
+        for (cur_img_position = 0; cur_img_position<listImage.size(); cur_img_position++) {
+            if (("file://" + listImage.get(cur_img_position).getImageUrl()).equals(img_path))
                 break;
         }
-        cur_img = listImage.get(cur_img_position_position);
+        cur_img = listImage.get(cur_img_position);
         //setup image adapter
         setUp();
 
@@ -70,7 +71,7 @@ public class ViewImage extends AppCompatActivity {
 
         // set adapter to view pager
         viewPager.setAdapter(imageAdapter);
-        viewPager.setCurrentItem(cur_img_position_position);
+        viewPager.setCurrentItem(cur_img_position);
 
         // set viewpager change listener
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
@@ -80,7 +81,7 @@ public class ViewImage extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                cur_img_position_position = position;
+                cur_img_position = position;
             }
 
             @Override
@@ -94,7 +95,7 @@ public class ViewImage extends AppCompatActivity {
         btn_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cur_img = listImage.get(cur_img_position_position);
+                cur_img = listImage.get(cur_img_position);
                 if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
                     Toast.makeText(ViewImage.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
                     ((MyApplication) ViewImage.this.getApplicationContext()).removeImageFromFavorite(cur_img);
@@ -168,6 +169,9 @@ public class ViewImage extends AppCompatActivity {
     }
 
     public boolean onMenuItemClick(MenuItem item) {
+        // update image
+        cur_img = listImage.get(cur_img_position);
+
         switch (item.getItemId()) {
             case R.id.btn_detail:
                 showImageDetail();
@@ -201,8 +205,7 @@ public class ViewImage extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         //Setting message manually and performing action on button click
-        builder.setMessage("Do you want to close this application ?")
-                .setCancelable(false)
+        builder.setMessage("Set wallpaper to ")
                 .setPositiveButton("Lock screen", new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     public void onClick(DialogInterface dialog, int id) {
@@ -236,28 +239,33 @@ public class ViewImage extends AppCompatActivity {
     private void showImageDetail() {
         try{
             ExifInterface exif = new ExifInterface(cur_img.getImageUrl());
-            String myAttribute="Exif information ---\n";
-            myAttribute += getTagString(ExifInterface.TAG_DATETIME, exif);
+            String myAttribute="";
+            myAttribute += "DateTime: " + cur_img.getImageDateTime() + "\n";
+            myAttribute += "Size:" + cur_img.getSize() + " | ";
+            myAttribute += "Resolution: " + cur_img.getWidth() + "x" + cur_img.getHeight() + "\n";
+            myAttribute += "Path: " + cur_img.getImageUrl() + "\n";
+            myAttribute += "Title: " + cur_img.getTitle() + "\n";
             myAttribute += getTagString(ExifInterface.TAG_FLASH, exif);
-            myAttribute += getTagString(ExifInterface.TAG_GPS_LATITUDE, exif);
-            myAttribute += getTagString(ExifInterface.TAG_GPS_LATITUDE_REF, exif);
-            myAttribute += getTagString(ExifInterface.TAG_GPS_LONGITUDE, exif);
-            myAttribute += getTagString(ExifInterface.TAG_GPS_LONGITUDE_REF, exif);
-            myAttribute += getTagString(ExifInterface.TAG_IMAGE_LENGTH, exif);
-            myAttribute += getTagString(ExifInterface.TAG_IMAGE_WIDTH, exif);
             myAttribute += getTagString(ExifInterface.TAG_MAKE, exif);
             myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
-            myAttribute += getTagString(ExifInterface.TAG_ORIENTATION, exif);
-            myAttribute += getTagString(ExifInterface.TAG_WHITE_BALANCE, exif);
-//            myTextView.setText(myAttribute);
+
+            // create dialog to choose option
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //Setting message manually and performing action on button click
+            builder.setMessage(myAttribute);
+            //Creating dialog box
+            AlertDialog alert = builder.create();
+            //Setting the title manually
+            alert.setTitle("Image information");
+            alert.show();
+
         }catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private String getTagString(String tag, ExifInterface exif) {
-        return(tag + " : " + exif.getAttribute(tag) + "\n");
+        return(tag + ": " + exif.getAttribute(tag) + "\n");
     }
 
 }

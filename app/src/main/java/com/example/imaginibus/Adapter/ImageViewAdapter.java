@@ -28,12 +28,14 @@ import java.util.List;
 public class ImageViewAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<ImageModel> modelArrayList;
-
+    private ImageModel cur_img;
     //constructor
     public ImageViewAdapter(Context ct, ArrayList<ImageModel> arr){
         this.context = ct;
         this.modelArrayList = arr;
     }
+
+    public ImageModel getCurImg(){ return cur_img; }
 
     @Override
     public int getCount() {
