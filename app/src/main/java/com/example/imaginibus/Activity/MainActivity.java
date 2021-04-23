@@ -268,12 +268,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         List<ImageModel> imageList = new ArrayList<>();
         List<AlbumModel> albumList = new ArrayList<>();
 
-        final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+        final String[] columns = { MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.LATITUDE,
+                MediaStore.Images.Media.LONGITUDE};
+
         final String orderBy = MediaStore.Images.Media.DATE_ADDED;
         //Stores all the images from the gallery in Cursor
         Cursor cursor = getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
-                null, orderBy);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
+
         //Total number of images
         int count = cursor.getCount();
         //Date format
@@ -285,15 +291,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
             int dateColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
             int albumColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            int latColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.LATITUDE);
+            int longColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE);
 
             //calculate the date taken
             String dateTaken = cursor.getString(dateColumnIndex);
             String date = formatter.format(new Date(Long.parseLong(dateTaken) * 1000L));
             //get album name
             String album = cursor.getString(albumColumnIndex);
-            //Store the path of the image
+            //Get the location
+            double latitude = cursor.getDouble(latColumnIndex);
+            double longitude = cursor.getDouble(longColumnIndex);
+
             ImageModel imageModel = new ImageModel();
-            imageModel.setImage(cursor.getString(dataColumnIndex), date, album);
+            imageModel.setImage(cursor.getString(dataColumnIndex), date, album, latitude, longitude);
 
             //add that image to list image
             imageList.add(0, imageModel);
