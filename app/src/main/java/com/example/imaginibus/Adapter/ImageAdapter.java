@@ -63,7 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageItemHol
 
         Glide.with(context)
                 .load(url)
-                .placeholder(R.drawable.gray_bg)
+//                .placeholder(R.drawable.gray_bg)
                 .error(R.drawable.gray_bg)
                 .centerCrop()
                 .into(imageItemHolder.thumb);

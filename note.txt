@@ -1,2 +1,4 @@
 swipe: viewpager
-zoom: photoview
+zoom: touch...
+
+https://stackoverflow.com/questions/59114620/how-to-set-wallpaper-as-lockscreen-or-bothhome-and-lock 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -26,12 +25,12 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImgAdapter extends PagerAdapter {
+public class ImageViewAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<ImageModel> modelArrayList;
 
     //constructor
-    public ImgAdapter(Context ct, ArrayList<ImageModel> arr){
+    public ImageViewAdapter(Context ct, ArrayList<ImageModel> arr){
         this.context = ct;
         this.modelArrayList = arr;
     }
@@ -49,14 +48,11 @@ public class ImgAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        // inflate layout item.xml
-        View view = LayoutInflater.from(context).inflate(R.layout.item, container, false);
+        // inflate layout item_image.xml
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image, container, false);
 
         // init uid views from item.xml
         TouchImageView img = view.findViewById(R.id.view_image);
-        LinearLayout header = view.findViewById(R.id.image_header);
-        LinearLayout footer = view.findViewById(R.id.image_footer);
-
 
         // get data
         ImageModel model = modelArrayList.get(position);
@@ -79,4 +75,5 @@ public class ImgAdapter extends PagerAdapter {
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
     }
+
 }

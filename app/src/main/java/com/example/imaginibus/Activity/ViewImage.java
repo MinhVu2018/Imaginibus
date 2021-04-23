@@ -1,43 +1,43 @@
 package com.example.imaginibus.Activity;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.imaginibus.Adapter.ImgAdapter;
+import com.example.imaginibus.Adapter.ImageViewAdapter;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 import com.google.gson.Gson;
 
-import org.xml.sax.helpers.AttributeListImpl;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
     ArrayList<ImageModel> listImage;
-    ImgAdapter imageAdapter;
-    int cur_img;
-
+    ImageViewAdapter imageAdapter;
+    int cur_img_position_position;
+    ImageModel cur_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +52,11 @@ public class ViewImage extends AppCompatActivity {
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
 
         String img_path = getIntent().getStringExtra("img_path");
-        for (cur_img = 0; cur_img<listImage.size(); cur_img++) {
-            if (("file://" + listImage.get(cur_img).getImageUrl()).equals(img_path))
+        for (cur_img_position_position = 0; cur_img_position_position<listImage.size(); cur_img_position_position++) {
+            if (("file://" + listImage.get(cur_img_position_position).getImageUrl()).equals(img_path))
                 break;
         }
-
+        cur_img = listImage.get(cur_img_position_position);
         //setup image adapter
         setUp();
 
@@ -66,11 +66,11 @@ public class ViewImage extends AppCompatActivity {
 
     public void setUp(){
         // setup adapter
-        imageAdapter = new ImgAdapter(this, listImage);
+        imageAdapter = new ImageViewAdapter(this, listImage);
 
         // set adapter to view pager
         viewPager.setAdapter(imageAdapter);
-        viewPager.setCurrentItem(cur_img);
+        viewPager.setCurrentItem(cur_img_position_position);
 
         // set viewpager change listener
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
@@ -80,7 +80,7 @@ public class ViewImage extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                cur_img = position;
+                cur_img_position_position = position;
             }
 
             @Override
@@ -90,26 +90,74 @@ public class ViewImage extends AppCompatActivity {
     }
 
     public void setupButton() {
-
         ImageButton btn_favorite = findViewById(R.id.btn_like);
         btn_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageModel image = listImage.get(cur_img);
-                if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(image)) {
+                cur_img = listImage.get(cur_img_position_position);
+                if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
                     Toast.makeText(ViewImage.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
-                    ((MyApplication) ViewImage.this.getApplicationContext()).removeImageFromFavorite(image);
+                    ((MyApplication) ViewImage.this.getApplicationContext()).removeImageFromFavorite(cur_img);
                 } else {
                     Toast.makeText(ViewImage.this.getApplicationContext(), "Add image to favorite!", Toast.LENGTH_SHORT).show();
-                    ((MyApplication) ViewImage.this.getApplicationContext()).addImageToFavorite(image);
+                    ((MyApplication) ViewImage.this.getApplicationContext()).addImageToFavorite(cur_img);
                 }
 
                 //save to my application and sharedreferences
                 saveListFavorite(((MyApplication) ViewImage.this.getApplicationContext()).getListFavorite());
             }
         });
+        // set up buttons
+        ImageButton btn_back = findViewById(R.id.btn_back);
+        btn_back.setOnClickListener(v -> finish());
+
+        ImageButton btn_like = findViewById(R.id.btn_like);
+        btn_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ViewImage.this, "Added to favorite", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageButton btn_option = findViewById(R.id.btn_option);
+        btn_option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v);
+            }
+        });
+
+        ImageButton btn_share = findViewById(R.id.btn_share);
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ViewImage.this, "Share deeeeeeeee", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageButton btn_edit = findViewById(R.id.btn_edit);
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ViewImage.this, "Ai cho mà chỉnh", Toast.LENGTH_SHORT).show();
+            }
+        });
+        ImageButton btn_delete = findViewById(R.id.btn_delete);
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ViewImage.this, "Xóa gòi đó", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this::onMenuItemClick);
+        popup.inflate(R.menu.view_option_menu);
+        popup.show();
+    }
+    
     private void saveListFavorite(List<ImageModel> items) {
         //SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
@@ -119,20 +167,97 @@ public class ViewImage extends AppCompatActivity {
         editor.commit();
     }
 
-//    public void showPopup(View v) {
-//        PopupMenu popup = new PopupMenu(this, v);
-//        popup.setOnMenuItemClickListener(this);
-//        popup.inflate(R.menu.view_option_menu);
-//        popup.show();
-//    }
-//
-//    @Override
-//    public boolean onMenuItemClick(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.btn_sync:
-//                Toast.makeText(this, "Sync clicked", Toast.LENGTH_SHORT).show();
-//                return true;
-//        }
-//        return false;
-//    }
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btn_detail:
+                showImageDetail();
+                return true;
+            case R.id.btn_background:
+                chooseScreen();
+                return true;
+        }
+        return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setWallpaper(String option){
+        WallpaperManager myWallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+        try {
+            InputStream ins = new URL("file://" + cur_img.getImageUrl()).openStream();
+            if (option.equals("Home"))
+                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_SYSTEM);
+            else if (option.equals("Lock"))
+                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_LOCK);
+            else
+                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_LOCK | WallpaperManager.FLAG_SYSTEM);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // choose home / lock / both
+    private void chooseScreen(){
+        // create dialog to choose option
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        //Setting message manually and performing action on button click
+        builder.setMessage("Do you want to close this application ?")
+                .setCancelable(false)
+                .setPositiveButton("Lock screen", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    public void onClick(DialogInterface dialog, int id) {
+                        setWallpaper("Lock");
+                        finish();
+                    }
+                })
+                .setNegativeButton("Home screen", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    public void onClick(DialogInterface dialog, int id) {
+                        setWallpaper("Home");
+                        finish();
+                    }
+                })
+                .setNeutralButton("Both", new DialogInterface.OnClickListener(){
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    public void onClick(DialogInterface dialog, int id){
+                        setWallpaper("Both");
+                        finish();
+                    }
+                });
+
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Set Wallpaper");
+        alert.show();
+    }
+
+    // exif wrong datetime
+    private void showImageDetail() {
+        try{
+            ExifInterface exif = new ExifInterface(cur_img.getImageUrl());
+            String myAttribute="Exif information ---\n";
+            myAttribute += getTagString(ExifInterface.TAG_DATETIME, exif);
+            myAttribute += getTagString(ExifInterface.TAG_FLASH, exif);
+            myAttribute += getTagString(ExifInterface.TAG_GPS_LATITUDE, exif);
+            myAttribute += getTagString(ExifInterface.TAG_GPS_LATITUDE_REF, exif);
+            myAttribute += getTagString(ExifInterface.TAG_GPS_LONGITUDE, exif);
+            myAttribute += getTagString(ExifInterface.TAG_GPS_LONGITUDE_REF, exif);
+            myAttribute += getTagString(ExifInterface.TAG_IMAGE_LENGTH, exif);
+            myAttribute += getTagString(ExifInterface.TAG_IMAGE_WIDTH, exif);
+            myAttribute += getTagString(ExifInterface.TAG_MAKE, exif);
+            myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
+            myAttribute += getTagString(ExifInterface.TAG_ORIENTATION, exif);
+            myAttribute += getTagString(ExifInterface.TAG_WHITE_BALANCE, exif);
+//            myTextView.setText(myAttribute);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String getTagString(String tag, ExifInterface exif) {
+        return(tag + " : " + exif.getAttribute(tag) + "\n");
+    }
+
 }

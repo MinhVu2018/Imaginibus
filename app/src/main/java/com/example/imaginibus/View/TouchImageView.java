@@ -12,8 +12,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import com.example.imaginibus.R;
 
 public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {

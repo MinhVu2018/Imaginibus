@@ -17,7 +17,6 @@
         android:foregroundGravity="center"
         android:overScrollMode="never"/>
 
-
     <LinearLayout
         android:id="@+id/image_header"
         android:layout_width="match_parent"
