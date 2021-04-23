@@ -275,13 +275,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                 MediaStore.Audio.Media.HEIGHT,
                                 MediaStore.Audio.Media.TITLE,
                                 MediaStore.Audio.Media.BUCKET_DISPLAY_NAME,
-                                MediaStore.Audio.Media.DISPLAY_NAME};
+                                MediaStore.Audio.Media.DISPLAY_NAME
+                                MediaStore.Images.Media.LATITUDE,
+                                MediaStore.Images.Media.LONGITUDE};
 
         final String orderBy = MediaStore.Images.Media.DATE_ADDED;
         //Stores all the images from the gallery in Cursor
         Cursor cursor = getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
-                null, orderBy);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
+
         //Total number of images
         int count = cursor.getCount();
 

@@ -14,12 +14,16 @@ public class ImageModel implements Serializable {
     private String album;
     private String[] data;
     // URL, DATE_ADDED, SIZE, WIDTH, HEIGHT, TITLE, BUCKET_DISPLAY_NAME, DISPLAY_NAME;
+    private double latitude, longitude;
 
     public ImageModel(){ }
-    public ImageModel(String url, String date, String album){
+
+    public ImageModel(String url, String date, String album, double latitude, double longitude){
         this.url = url;
         this.date = date;
         this.album = album;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
     public ImageModel(String[] d){
         data = new String[d.length];
@@ -48,4 +52,6 @@ public class ImageModel implements Serializable {
     public String getTitle() { return data[5]; }
     public String getAlbum() { return data[6]; }
     public String getName() { return data[7]; }
+    public Double getLat() { return String.toDouble(data[8]); }
+    public Double getLong() { return String.toDouble(data[9]); }
 }

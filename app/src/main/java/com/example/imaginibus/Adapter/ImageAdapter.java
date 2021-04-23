@@ -19,7 +19,7 @@ import com.example.imaginibus.R;
 import java.io.Serializable;
 import java.util.List;
 
-public class ImageAdapter extends RecyclerView.Adapter {
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageItemHolder> {
     List<ImageModel> items;
     Context context;
 
@@ -50,14 +50,13 @@ public class ImageAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImageItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_image_item, parent, false);
         return new ImageItemHolder(item);
     }
 
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ImageItemHolder imageItemHolder, int position) {
         ImageModel item = items.get(position);
-        ImageItemHolder imageItemHolder = (ImageItemHolder) holder;
 
         //file the path of image
         String url = "file://" + item.getImageUrl();
