@@ -18,19 +18,16 @@ public class ImageModel implements Serializable {
 
     public ImageModel(){ }
 
-    public ImageModel(String url, String date, String album, double latitude, double longitude){
-        this.url = url;
-        this.date = date;
-        this.album = album;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
     public ImageModel(String[] d){
         data = new String[d.length];
         for (int i=0; i<d.length; i++)
             data[i] = d[i];
     }
-    public void setImage(String url, String date, String album) { this.url = url; this.date = date; this.album = album; }
+
+    public void setImageLocation(Double latitude, Double longtitude) {
+        this.latitude = latitude;
+        this.longitude = longtitude;
+    }
     public String getImageUrl() { return data[0]; }
     public String getImageDate() {
         //Date format
@@ -52,6 +49,6 @@ public class ImageModel implements Serializable {
     public String getTitle() { return data[5]; }
     public String getAlbum() { return data[6]; }
     public String getName() { return data[7]; }
-    public Double getLat() { return String.toDouble(data[8]); }
-    public Double getLong() { return String.toDouble(data[9]); }
+    public Double getLat() { return latitude; }
+    public Double getLong() { return longitude; }
 }

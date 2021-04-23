@@ -63,7 +63,7 @@ public class Location extends AppCompatActivity {
         //geocoder
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> address;
-        String city = "404 Not Found";
+        String city = "Location not found";
 
         //allocate memory
         listImageLocation = new ArrayList<>();
