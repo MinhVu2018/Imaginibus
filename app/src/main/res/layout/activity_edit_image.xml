@@ -4,11 +4,195 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".Activity.EditImage">
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/photoEditorView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/editBar"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/editBar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/btn_undo"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_undo_white"/>
+            <ImageButton
+                android:id="@+id/btn_redo"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_redo_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#11120f"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_brush"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_brush_white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/btn_text"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_text_white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/btn_erase"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_eraser_white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/btn_sticker"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_sticker_white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/btn_emoji"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_emoji_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="#11120f"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Brush"
+                android:textColor="@color/white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Text"
+                android:textColor="@color/white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Erase"
+                android:textColor="@color/white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Sticker"
+                android:textColor="@color/white"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Emoji"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_cancel_white"/>
+            <TextView
+                android:id="@+id/cur_editor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:textColor="@color/white"/>
+            <ImageButton
+                android:id="@+id/btn_save"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_download_white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

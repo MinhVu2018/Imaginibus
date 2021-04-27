@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ImageModel implements Serializable {
-    private String url;
-    private String date;
-    private String album;
     private String[] data;
     // URL, DATE_ADDED, SIZE, WIDTH, HEIGHT, TITLE, BUCKET_DISPLAY_NAME, DISPLAY_NAME;
     private double latitude, longitude;
