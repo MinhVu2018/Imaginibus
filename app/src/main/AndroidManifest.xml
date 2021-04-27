@@ -10,7 +10,7 @@
         android:required="true" />
     <uses-permission
         android:name="android.permission.SET_WALLPAPER"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name=".MyApplication"
@@ -21,7 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Imaginibus">
-        <activity android:name=".Activity.ViewVideo"></activity>
+        <activity android:name=".Activity.EditImage"></activity>
+        <activity android:name=".Activity.ActivityEditImage" />
+        <activity android:name=".Activity.ViewVideo" />
         <activity android:name=".Activity.FavoriteLayoutA" />
         <activity android:name=".Activity.ViewImage" />
         <activity android:name=".Activity.SecureCode" />

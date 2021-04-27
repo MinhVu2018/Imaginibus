@@ -9,10 +9,12 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +31,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,13 +115,6 @@ public class ViewImage extends AppCompatActivity {
         ImageButton btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> finish());
 
-        ImageButton btn_like = findViewById(R.id.btn_like);
-        btn_like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ViewImage.this, "Added to favorite", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         ImageButton btn_option = findViewById(R.id.btn_option);
         btn_option.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +136,9 @@ public class ViewImage extends AppCompatActivity {
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ViewImage.this, "Ai cho mà chỉnh", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ViewImage.this, EditImage.class);
+                intent.putExtra("IMG_PATH", (Serializable)listImage.get(cur_img_position));
+                startActivity(intent);
             }
         });
         ImageButton btn_delete = findViewById(R.id.btn_delete);

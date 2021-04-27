@@ -6,6 +6,7 @@ import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Model.VideoModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends Application {
@@ -35,6 +36,10 @@ public class MyApplication extends Application {
     }
 
     public void addImageToFavorite(ImageModel item) {
+        if (listFavorite == null) {
+            listFavorite = new ArrayList<>();
+        }
+
         listFavorite.add(item);
     }
 
