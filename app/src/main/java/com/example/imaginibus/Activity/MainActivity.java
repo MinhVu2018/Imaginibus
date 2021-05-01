@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    ImageButton btn_search, btn_option, btn_gallery, btn_video, btn_location, btn_favorite, btn_secure;
+    ImageButton btn_search, btn_option, btn_gallery, btn_video, btn_location, btn_favorite, btn_secure, btn_face;
     Locale myLocale;
     String currentLang;
     Boolean isSDPresent;
@@ -192,9 +192,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 saveTheme(false);
                 break;
+            case R.id.btn_face_group:
+                Intent intent = new Intent(MainActivity.this, FaceGroup.class);
+                startActivity(intent);
+                break;
             case R.id.btn_camera:
-                Intent intent = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
-                startActivityForResult(intent, 1001);
+                Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
+                startActivityForResult(intent_camera, 1001);
                 break;
             default:
                 break;
@@ -340,12 +344,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             addImageToAlbum(albumList, imageModel, imageModel.getAlbum());
         }
 
-        // The cursor should be freed up after use with close()
-        cursor.close();
-
         //set to application variable
         ((MyApplication) this.getApplication()).setListImage(imageList);
         ((MyApplication) this.getApplication()).setListAlbum(albumList);
+
+        // The cursor should be freed up after use with close()
+        cursor.close();
     }
 
     private void addImageToAlbum(List<AlbumModel> listAlbum, ImageModel image, String albumName) {
