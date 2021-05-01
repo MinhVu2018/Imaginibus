@@ -18,6 +18,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/btn_face_group"
+        android:title="@string/btn_face_detect"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/btn_language"
         android:title="@string/btn_language"
         app:showAsAction="ifRoom">

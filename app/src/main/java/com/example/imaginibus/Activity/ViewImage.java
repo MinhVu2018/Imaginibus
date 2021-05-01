@@ -8,12 +8,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +34,7 @@ import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -154,7 +160,10 @@ public class ViewImage extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteImage(new File(listImage.get(cur_img_position).getImageUrl()));
+                listImage.remove(listImage.get(cur_img_position));
                 Toast.makeText(ViewImage.this, "Xóa gòi đó", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
@@ -273,6 +282,29 @@ public class ViewImage extends AppCompatActivity {
 
     private String getTagString(String tag, ExifInterface exif) {
         return(tag + ": " + exif.getAttribute(tag) + "\n");
+    }
+
+    private void deleteImage(File file) {
+        // Set up the projection (we only need the ID)
+        String[] projection = {MediaStore.Images.Media._ID};
+
+        // Match on the file path
+        String selection = MediaStore.Images.Media.DATA + " = ?";
+        String[] selectionArgs = new String[]{file.getAbsolutePath()};
+
+        // Query for the ID of the media matching the file path
+        Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver contentResolver = getContentResolver();
+        Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+        if (c.moveToFirst()) {
+            // We found the ID. Deleting the item via the content provider will also remove the file
+            long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+            Uri deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            contentResolver.delete(deleteUri, null, null);
+        } else {
+            // File not found in media store
+        }
+        c.close();
     }
 
 }
