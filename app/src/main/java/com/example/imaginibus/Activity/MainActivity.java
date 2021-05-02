@@ -33,6 +33,7 @@ import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
+import com.example.imaginibus.Service.FaceDetection;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -73,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        //start service
+        Intent intent = new Intent(MainActivity.this, FaceDetection.class);
+        startService(intent);
 
         //load the content
         setContentView(R.layout.activity_main);

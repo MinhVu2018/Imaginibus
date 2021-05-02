@@ -7,6 +7,7 @@ import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Model.VideoModel;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class MyApplication extends Application {
@@ -14,6 +15,7 @@ public class MyApplication extends Application {
     private List<AlbumModel> listAlbum;
     private List<VideoModel> listVideo;
     private List<ImageModel> listFavorite;
+    public Hashtable<Integer, List<Integer>> listIdImage;
 
     public boolean setListImage(List<ImageModel> listImagePath) {
         this.listImage = listImagePath;
