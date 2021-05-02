@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +22,13 @@ import com.example.imaginibus.R;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 
-public class EditImage extends AppCompatActivity {
+public class EditImage extends AppCompatActivity implements BrushDialog.BrushDialogListener{
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
     ImageButton btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_sticker, btn_emoji, btn_cancel, btn_save;
     TextView cur_editor;
+    static int size = 0, opacity = 100, color = Color.BLACK;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,8 @@ public class EditImage extends AppCompatActivity {
                 .setDefaultTextTypeface(mTextRobotoTf)
                 .setDefaultEmojiTypeface(mEmojiTypeFace)
                 .build();
+        photoEditor.setOpacity(0);
+        photoEditor.setBrushSize(0);
     }
 
     private void setUpButton(){
@@ -95,18 +100,30 @@ public class EditImage extends AppCompatActivity {
         btn_brush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cur_editor.setText("Brush");
-                photoEditor.setBrushDrawingMode(true);
+                BrushDialog dialog = new BrushDialog();
 
-//                BrushDialog dialog = new BrushDialog(getApplicationContext());
-//                dialog.show();
+                Bundle args = new Bundle();
+                args.putInt("size", size);
+                args.putInt("opacity", opacity);
+                args.putInt("color", color);
+                dialog.setArguments(args);
+
+                dialog.show(getSupportFragmentManager(), "Drawing");
+                
+                cur_editor.setText("Brush");
+
+                photoEditor.setBrushSize(size);
+                photoEditor.setOpacity(opacity);
+                photoEditor.setBrushColor(color);
+
+                photoEditor.setBrushDrawingMode(true);
             }
         });
         btn_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cur_editor.setText("Text");
-//                photoEditor.addText(inputText, colorCode);
+                photoEditor.addText("ABC", Color.BLACK);
             }
         });
         btn_erase.setOnClickListener(new View.OnClickListener(){
@@ -155,5 +172,30 @@ public class EditImage extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    public void ApplyOption(int size, int opacity, int color) {
+        this.color = color;
+        this.size = size;
+        this.opacity = opacity;
+
+        FullScreencall();
+        photoEditor.setBrushSize(size);
+        photoEditor.setOpacity(opacity);
+        photoEditor.setBrushColor(color);
+
+        photoEditor.setBrushDrawingMode(true);
+    }
+
+    public void FullScreencall() {
+        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if(Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 }
