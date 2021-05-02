@@ -31,15 +31,15 @@ public class BrushDialog extends AppCompatDialogFragment {
     private SeekBar brush_size, brush_opacity;
     private int size = 0, opacity = 100;
     private int brush_color = Color.BLACK;
-    CircleImageView black_img, white_img, red_img, yellow_img, green_img, blue_img, colorpicker_img;
-    List<CircleImageView> list_img;
+    private CircleImageView black_img, white_img, red_img, yellow_img, green_img, blue_img, colorpicker_img;
+    private List<CircleImageView> list_img;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.bottom_editor_sheet, null);
+        View view = inflater.inflate(R.layout.brush_dialog, null);
 
         brush_size = view.findViewById(R.id.BrushSize);
         brush_opacity = view.findViewById(R.id.BrushOpacity);

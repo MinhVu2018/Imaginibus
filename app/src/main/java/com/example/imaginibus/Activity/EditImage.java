@@ -16,19 +16,25 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.imaginibus.Dialog.BrushDialog;
+import com.example.imaginibus.Dialog.TextDialog;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 
+import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
+import ja.burhanrashid52.photoeditor.ViewType;
 
-public class EditImage extends AppCompatActivity implements BrushDialog.BrushDialogListener{
+public class EditImage extends AppCompatActivity implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener{
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
     ImageButton btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_sticker, btn_emoji, btn_cancel, btn_save;
     TextView cur_editor;
-    static int size = 0, opacity = 100, color = Color.BLACK;
+    static int size = 0, opacity = 100, brush_color = Color.BLACK, text_color = Color.BLACK;
+    static String text;
+    View cur_view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,21 +106,20 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
         btn_brush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cur_editor.setText("Brush");
                 BrushDialog dialog = new BrushDialog();
 
                 Bundle args = new Bundle();
                 args.putInt("size", size);
                 args.putInt("opacity", opacity);
-                args.putInt("color", color);
+                args.putInt("color", brush_color);
                 dialog.setArguments(args);
 
                 dialog.show(getSupportFragmentManager(), "Drawing");
-                
-                cur_editor.setText("Brush");
 
                 photoEditor.setBrushSize(size);
                 photoEditor.setOpacity(opacity);
-                photoEditor.setBrushColor(color);
+                photoEditor.setBrushColor(brush_color);
 
                 photoEditor.setBrushDrawingMode(true);
             }
@@ -123,7 +128,42 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
             @Override
             public void onClick(View v) {
                 cur_editor.setText("Text");
-                photoEditor.addText("ABC", Color.BLACK);
+                TextDialog dialog = new TextDialog();
+                dialog.show(getSupportFragmentManager(), "Text");
+
+                photoEditor.setOnPhotoEditorListener(new OnPhotoEditorListener() {
+                    @Override
+                    public void onEditTextChangeListener(View rootView, String text, int colorCode) {
+                        cur_view = rootView;
+
+                        TextDialog dialog = new TextDialog();
+                        Bundle args = new Bundle();
+                        args.putString("text", text);
+                        args.putInt("color", text_color);
+                        dialog.setArguments(args);
+                        dialog.show(getSupportFragmentManager(), "Text");
+                    }
+
+                    @Override
+                    public void onAddViewListener(ViewType viewType, int i) {
+
+                    }
+
+                    @Override
+                    public void onRemoveViewListener(ViewType viewType, int i) {
+
+                    }
+
+                    @Override
+                    public void onStartViewChangeListener(ViewType viewType) {
+
+                    }
+
+                    @Override
+                    public void onStopViewChangeListener(ViewType viewType) {
+
+                    }
+                });
             }
         });
         btn_erase.setOnClickListener(new View.OnClickListener(){
@@ -173,19 +213,6 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
             }
         });
     }
-    @Override
-    public void ApplyOption(int size, int opacity, int color) {
-        this.color = color;
-        this.size = size;
-        this.opacity = opacity;
-
-        FullScreencall();
-        photoEditor.setBrushSize(size);
-        photoEditor.setOpacity(opacity);
-        photoEditor.setBrushColor(color);
-
-        photoEditor.setBrushDrawingMode(true);
-    }
 
     public void FullScreencall() {
         if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
@@ -197,5 +224,37 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    // brush editor
+    @Override
+    public void ApplyOption(int size, int opacity, int color) {
+        this.brush_color = color;
+        this.size = size;
+        this.opacity = opacity;
+
+        FullScreencall();
+        photoEditor.setBrushSize(size);
+        photoEditor.setOpacity(opacity);
+        photoEditor.setBrushColor(color);
+
+        photoEditor.setBrushDrawingMode(true);
+    }
+
+    // text editor
+    @Override
+    public void NewText(String input_text, int color) {
+        // args for dialog
+        this.text = input_text;
+        this.text_color = color;
+        photoEditor.addText(text, text_color);
+    }
+
+    @Override
+    public void EditText(String input_text, int color) {
+        // args for dialog
+        this.text = input_text;
+        this.text_color = color;
+        photoEditor.editText(cur_view, text, text_color);
     }
 }
