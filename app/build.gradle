@@ -29,10 +29,9 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
     // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
     //gson to save object to sharedreferences
-    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
@@ -48,4 +47,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
 
+    //ml for face detector https://developers.google.com/ml-kit/vision/face-detection/android
+    implementation 'com.google.mlkit:face-detection:16.0.7'
 }

@@ -8,6 +8,7 @@
     <string name="location_title">Location</string>
     <string name="secure_title">Secure Album</string>
     <string name="count_picture"> item</string>
+    <string name="group_face_title">Face Albums</string>
 
     <!--Text on option menu-->
     <string name="btn_sync">Sync</string>
@@ -24,6 +25,8 @@
     <string name="btn_tag">Tag</string>
     <string name="btn_secure">Add/remove from Secure</string>
     <string name="btn_background">Set as Background</string>
+    <string name="btn_face_detect">Show Face\'s album</string>
+
 
     <!--Text on secure album-->
     <string name="login">Login</string>

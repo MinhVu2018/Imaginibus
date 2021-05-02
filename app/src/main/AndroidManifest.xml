@@ -23,8 +23,8 @@
         android:supportsRtl="true"
         android:configChanges="orientation|screenSize"
         android:theme="@style/Theme.Imaginibus">
-        <activity android:name=".Activity.EditImage"></activity>
-
+        <activity android:name=".Activity.FaceGroup"></activity>
+        <activity android:name=".Activity.EditImage" />
         <activity android:name=".Activity.ViewVideo" />
         <activity android:name=".Activity.FavoriteLayoutA" />
         <activity android:name=".Activity.ViewImage" />
