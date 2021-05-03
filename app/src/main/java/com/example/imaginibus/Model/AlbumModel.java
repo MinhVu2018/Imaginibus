@@ -8,11 +8,7 @@ public class AlbumModel {
     String albumName;
 
     public AlbumModel(List<ImageModel> listImage, String albumName) {
-        if (listImage == null)
-            this.listImage = new ArrayList<>();
-        else
-            this.listImage = listImage;
-
+        this.listImage = listImage;
         this.albumName = albumName;
     }
 
@@ -25,6 +21,6 @@ public class AlbumModel {
     public String getAlbumName() { return this.albumName; }
     public List<ImageModel> getListImage() { return this.listImage; }
     public void addImage(ImageModel item) {
-        listImage.add(item);
+        this.listImage.add(item);
     }
 }

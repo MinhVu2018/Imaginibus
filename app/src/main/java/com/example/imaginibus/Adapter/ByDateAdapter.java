@@ -79,7 +79,6 @@ public class ByDateAdapter extends RecyclerView.Adapter {
             }
 
             temp.add(item);
-            Log.i("DAY", curDay);
         }
 
         Collections.reverse(temp);

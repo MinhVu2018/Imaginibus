@@ -62,6 +62,11 @@ public class FaceGroup extends AppCompatActivity {
         numImage = findViewById(R.id.num_images);
         numImage.setText(String.valueOf(listImageFace.size()) + " ");
         recyclerView = findViewById(R.id.list_album);
+        //debug
+        for (int i=0; i<listImageFace.size(); i++) {
+            Log.i("ID", String.valueOf(i));
+            Log.i("SIZE", String.valueOf(listImageFace.get(i).getListImage().size()));
+        }
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, listImageFace);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listAlbumAdapter);
@@ -80,6 +85,7 @@ public class FaceGroup extends AppCompatActivity {
 
 
     private void setupAlbum() {
+        //get all image and it key set
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
         Set<Integer> faceIdKey = ((MyApplication) this.getApplication()).listIdImage.keySet();
         listImageFace = new ArrayList<>();
@@ -89,27 +95,25 @@ public class FaceGroup extends AppCompatActivity {
         listImageFace.add(albumModel);
 
         for (int key : faceIdKey) {
+            //get list of face id in an image
             List<Integer> faceIdVal = ((MyApplication) this.getApplication()).listIdImage.get(key);
-            Log.i("KEY", String.valueOf(key));
-            Log.i("VAL", String.valueOf(faceIdVal));
-
+            //if not exists a face, add to not found album
             if (faceIdVal.size() == 0) {
                 listImageFace.get(0).addImage(allImage.get(key));
-                continue;
-            }
-
-            for (int id : faceIdVal) {
-                boolean exist = false;
-                for (int j=0; j<listImageFace.size(); j++) {
-                    if (listImageFace.get(j).getAlbumName().equals(String.valueOf(id))) {
-                        listImageFace.get(j).addImage(allImage.get(key));
-                        exist = true;
-                        break;
+            } else {
+                for (int id : faceIdVal) {
+                    boolean exist = false;
+                    for (int j = 0; j < listImageFace.size(); j++) {
+                        if (listImageFace.get(j).getAlbumName().equals(String.valueOf(id))) {
+                            listImageFace.get(j).addImage(allImage.get(key));
+                            exist = true;
+                            break;
+                        }
                     }
-                }
-                if (exist == false) {
-                    albumModel = new AlbumModel(allImage.get(key), String.valueOf(id));
-                    listImageFace.add(albumModel);
+                    if (!exist) {
+                        albumModel = new AlbumModel(allImage.get(key), String.valueOf(id));
+                        listImageFace.add(albumModel);
+                    }
                 }
             }
         }
