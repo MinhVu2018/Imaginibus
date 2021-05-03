@@ -12,4 +12,6 @@
     <color name="green">#008000</color>
     <color name="blue">#0000FF</color>
     <color name="pink">#FFC0CB</color>
+    <color name="transparent_black">#66000000</color>
+    <color name="transparent_white">#00FFFFFF</color>
 </resources>

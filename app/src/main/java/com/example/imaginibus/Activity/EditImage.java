@@ -3,12 +3,14 @@ package com.example.imaginibus.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,16 +18,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.imaginibus.Dialog.BrushDialog;
+import com.example.imaginibus.Dialog.EmojiDialog;
 import com.example.imaginibus.Dialog.TextDialog;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
+
+import java.util.ArrayList;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.ViewType;
 
-public class EditImage extends AppCompatActivity implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener{
+public class EditImage extends AppCompatActivity
+                        implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener, EmojiDialog.EmojiDialogListener{
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
@@ -116,12 +122,6 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
                 dialog.setArguments(args);
 
                 dialog.show(getSupportFragmentManager(), "Drawing");
-
-                photoEditor.setBrushSize(size);
-                photoEditor.setOpacity(opacity);
-                photoEditor.setBrushColor(brush_color);
-
-                photoEditor.setBrushDrawingMode(true);
             }
         });
         btn_text.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +185,10 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
             @Override
             public void onClick(View v){
                 cur_editor.setText("Emoji");
-                Bitmap bitmap;
-//                photoEditor.addImage(bitmap);
+                ArrayList<String> list_emoji = PhotoEditor.getEmojis(getApplicationContext());
+                EmojiDialog dialog = new EmojiDialog(list_emoji);
+
+                dialog.show(getSupportFragmentManager(), "Emoji");
             }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener(){
@@ -248,6 +250,7 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
         this.text = input_text;
         this.text_color = color;
         photoEditor.addText(text, text_color);
+        FullScreencall();
     }
 
     @Override
@@ -256,5 +259,14 @@ public class EditImage extends AppCompatActivity implements BrushDialog.BrushDia
         this.text = input_text;
         this.text_color = color;
         photoEditor.editText(cur_view, text, text_color);
+        FullScreencall();
+    }
+
+    // emoji editor
+
+    @Override
+    public void ApplyEmoji(String text) {
+        photoEditor.addText(text, Color.BLACK);
+        FullScreencall();
     }
 }

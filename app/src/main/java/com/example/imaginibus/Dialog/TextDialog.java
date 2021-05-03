@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.imaginibus.R;
 import com.flask.colorpicker.ColorPickerView;
@@ -37,6 +39,7 @@ public class TextDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        setStyle(DialogFragment.STYLE_NO_FRAME, 0);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -60,7 +63,7 @@ public class TextDialog extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (edit_flag)
                             listener.EditText(text_input.getText().toString(), text_color);
-                        else
+                        else if (!text_input.getText().toString().equals(""))
                             listener.NewText(text_input.getText().toString(), text_color);
                     }
                 });
