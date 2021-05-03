@@ -75,9 +75,9 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         AlbumModel item = items.get(position);
         ListAlbumHolder listAlbumHolder = (ListAlbumHolder) holder;
-        List<ImageModel> listImage = item.getListImage();
 
-        Collections.reverse(listImage);
+        //get list image of an album
+        List<ImageModel> listImage = item.getListImage();
 
         listAlbumHolder.albumName.setText(item.getAlbumName());
         //set the first image (always correct)
@@ -96,7 +96,7 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
                     .error(R.drawable.gray_bg)
                     .centerCrop()
                     .into(listAlbumHolder.demoImg2);
-
+            listAlbumHolder.demoImg2.setVisibility(View.VISIBLE);
             if (listImage.size() >= 3) {
                 Glide.with(context)
                         .load("file://" + listImage.get(2).getImageUrl())
@@ -104,9 +104,13 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
                         .error(R.drawable.gray_bg)
                         .centerCrop()
                         .into(listAlbumHolder.demoImg3);
+                listAlbumHolder.demoImg3.setVisibility(View.VISIBLE);
+            } else {
+                listAlbumHolder.demoImg3.setVisibility(View.INVISIBLE);
             }
         } else {
-            listAlbumHolder.more.setVisibility(View.GONE);
+            listAlbumHolder.demoImg2.setVisibility(View.INVISIBLE);
+            listAlbumHolder.demoImg3.setVisibility(View.INVISIBLE);
         }
     }
 

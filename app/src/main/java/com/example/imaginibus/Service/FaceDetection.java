@@ -93,8 +93,8 @@ public class FaceDetection extends Service {
     private void faceDetecting() {
         //Step 1, configure the face detector
         FaceDetectorOptions faceDetectorOptions = new FaceDetectorOptions.Builder()
-                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
-                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
                 .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
                 .enableTracking()
                 .build();
@@ -110,7 +110,7 @@ public class FaceDetection extends Service {
         //get all image of the computer
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
 
-        for (int i=0; i<50; i++) {
+        for (int i=0; i<100; i++) {
             //get the image
             ImageModel imageModel = allImage.get(i);
 
@@ -119,7 +119,6 @@ public class FaceDetection extends Service {
                 InputImage image;
                 Uri uri = Uri.fromFile(new File(imageModel.getImageUrl()));
                 image = InputImage.fromFilePath(this, uri);
-                Log.i("IMAGE", String.valueOf(image));
                 //process image
                 processImage(image);
             } catch (IOException e) {
@@ -137,7 +136,6 @@ public class FaceDetection extends Service {
                             public void onSuccess(List<Face> faces) {
                                 List<Integer> listId = new ArrayList<>();
                                 for (Face face : faces) {
-                                    Log.i("ID", String.valueOf(face.getTrackingId()));
                                     listId.add(face.getTrackingId());
                                 }
                                 ((MyApplication) FaceDetection.this.getApplication()).listIdImage.put(((MyApplication) FaceDetection.this.getApplication()).listIdImage.size(), listId);

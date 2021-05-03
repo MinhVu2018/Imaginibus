@@ -72,9 +72,6 @@ public class Location extends AppCompatActivity {
 
         for (ImageModel item : allImage) {
             //find the city of this item
-            Log.i("LAT", String.valueOf(item.getLat()));
-            Log.i("LONG", String.valueOf(item.getLong()));
-
             if (item.getLat() != 0 || item.getLong() != 0) {
                 try {
                     address = geocoder.getFromLocation(item.getLat(), item.getLong(), 1);
@@ -95,7 +92,6 @@ public class Location extends AppCompatActivity {
     private void addImageToAlbum(ImageModel image, String albumName) {
         int albumSize = listImageLocation.size();
         for (int i = 0; i < albumSize; i++) {
-            Log.i("Tag Name", listImageLocation.get(i).getAlbumName());
             if (listImageLocation.get(i).getAlbumName().equals(albumName)) {
                 listImageLocation.get(i).addImage(image);
                 return;
