@@ -1,29 +1,43 @@
 package com.example.imaginibus.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.imaginibus.Dialog.BrushDialog;
 import com.example.imaginibus.Dialog.EmojiDialog;
+import com.example.imaginibus.Dialog.StickerDialog;
 import com.example.imaginibus.Dialog.TextDialog;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -31,7 +45,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.ViewType;
 
 public class EditImage extends AppCompatActivity
-                        implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener, EmojiDialog.EmojiDialogListener{
+        implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener, EmojiDialog.EmojiDialogListener, StickerDialog.StickerDialogListener {
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
@@ -40,6 +54,7 @@ public class EditImage extends AppCompatActivity
     static int size = 0, opacity = 100, brush_color = Color.BLACK, text_color = Color.BLACK;
     static String text;
     View cur_view;
+    static String filePath = "/storage/emulated/0/DCIM/Imaginibus/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,16 +111,16 @@ public class EditImage extends AppCompatActivity
         photoEditor.setBrushSize(0);
     }
 
-    private void setUpButton(){
-        btn_undo.setOnClickListener(new View.OnClickListener(){
+    private void setUpButton() {
+        btn_undo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 photoEditor.undo();
             }
         });
-        btn_redo.setOnClickListener(new View.OnClickListener(){
+        btn_redo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 photoEditor.redo();
             }
         });
@@ -166,24 +181,25 @@ public class EditImage extends AppCompatActivity
                 });
             }
         });
-        btn_erase.setOnClickListener(new View.OnClickListener(){
+        btn_erase.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 cur_editor.setText("Eraser");
                 photoEditor.brushEraser();
             }
         });
-        btn_sticker.setOnClickListener(new View.OnClickListener(){
+        btn_sticker.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 cur_editor.setText("Sticker");
-                Bitmap bitmap;
-//                photoEditor.addImage(bitmap);
+                StickerDialog dialog = new StickerDialog();
+
+                dialog.show(getSupportFragmentManager(), "Sticker");
             }
         });
-        btn_emoji.setOnClickListener(new View.OnClickListener(){
+        btn_emoji.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 cur_editor.setText("Emoji");
                 ArrayList<String> list_emoji = PhotoEditor.getEmojis(getApplicationContext());
                 EmojiDialog dialog = new EmojiDialog(list_emoji);
@@ -191,27 +207,48 @@ public class EditImage extends AppCompatActivity
                 dialog.show(getSupportFragmentManager(), "Emoji");
             }
         });
-        btn_cancel.setOnClickListener(new View.OnClickListener(){
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 finish();
+                FullScreencall();
             }
         });
-        btn_save.setOnClickListener(new View.OnClickListener(){
+        btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-//                photoEditor.saveAsFile(filePath, new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePath) {
-//                        Log.e("PhotoEditor","Image Saved Successfully");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        Log.e("PhotoEditor","Failed to save Image");
-//                    }
-//                });
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(EditImage.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+
+                File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/Imaginibus");
+
+                mediaStorageDir.mkdir();
+
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/DCIM/Imaginibus";
+                String currentDateTime = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                String fileName = currentDateTime + ".png";
+
+                photoEditor.saveAsFile(filePath + "/" + fileName, new PhotoEditor.OnSaveListener() {
+                    @Override
+                    public void onSuccess(@NonNull String imagePath) {
+                        Toast.makeText(EditImage.this, "Image Saved Successfully", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(EditImage.this, "Failed to save Image", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 finish();
+                FullScreencall();
             }
         });
     }
@@ -263,10 +300,17 @@ public class EditImage extends AppCompatActivity
     }
 
     // emoji editor
-
     @Override
     public void ApplyEmoji(String text) {
         photoEditor.addText(text, Color.BLACK);
         FullScreencall();
     }
+
+    // sticker editor
+    @Override
+    public void ApplySticker(Bitmap bitmap){
+        photoEditor.addImage(bitmap);
+        FullScreencall();
+    }
+
 }

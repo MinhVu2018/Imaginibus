@@ -105,8 +105,7 @@
                     android:layout_width="200dp"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image13" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -114,8 +113,7 @@
                     android:layout_width="150dp"
                     android:layout_height="200dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image14" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -123,8 +121,7 @@
                     android:layout_width="150dp"
                     android:layout_height="200dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image11" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -133,8 +130,7 @@
                     android:layout_width="200dp"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image12" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -142,8 +138,7 @@
                     android:layout_width="200dp"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image06" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -152,8 +147,7 @@
                     android:layout_width="150dp"
                     android:layout_height="200dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image05" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView7"
@@ -161,8 +155,7 @@
                     android:layout_width="150dp"
                     android:layout_height="200dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image01" />
+                    android:scaleType="centerCrop"/>
 
                 <ImageView
                     android:id="@+id/imageView8"
@@ -171,8 +164,7 @@
                     android:layout_width="200dp"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image02" />
+                    android:scaleType="centerCrop"/>
 
                 <ImageView
                     android:id="@+id/imageView9"
@@ -180,8 +172,7 @@
                     android:layout_width="200dp"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image03" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageView10"
@@ -190,8 +181,7 @@
                     android:layout_width="150dp"
                     android:layout_height="200dp"
                     android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image04" />
+                    android:scaleType="centerCrop" />
 
             </RelativeLayout>
 
