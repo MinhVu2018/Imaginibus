@@ -49,4 +49,5 @@ dependencies {
 
     //ml for face detector https://developers.google.com/ml-kit/vision/face-detection/android
     implementation 'com.google.mlkit:face-detection:16.0.7'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }

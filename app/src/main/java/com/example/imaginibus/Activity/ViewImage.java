@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
@@ -14,10 +15,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,18 +34,21 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.imaginibus.Adapter.ImageViewAdapter;
+import com.example.imaginibus.BuildConfig;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
@@ -126,10 +134,9 @@ public class ViewImage extends AppCompatActivity {
                 saveListFavorite(((MyApplication) ViewImage.this.getApplicationContext()).getListFavorite());
             }
         });
-        // set up buttons
+
         ImageButton btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> finish());
-
 
         ImageButton btn_option = findViewById(R.id.btn_option);
         btn_option.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +150,36 @@ public class ViewImage extends AppCompatActivity {
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ViewImage.this, "Share deeeeeeeee", Toast.LENGTH_SHORT).show();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(ViewImage.this.getContentResolver() , Uri.fromFile(new File(cur_img.getImageUrl())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    File file = new File(getApplicationContext().getExternalCacheDir(), File.separator +"image that you wants to share");
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                    file.setReadable(true, false);
+                    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    File imageFileToShare = new File(cur_img.getImageUrl());
+                    Uri imageUri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                            BuildConfig.APPLICATION_ID + ".provider", imageFileToShare);
+
+                    intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setType("image/*");
+
+                    startActivity(Intent.createChooser(intent, "Share image via"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                Toast.makeText(ViewImage.this, "Share deeeeeeeee", Toast.LENGTH_SHORT).show();
             }
         });
 

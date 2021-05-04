@@ -25,11 +25,28 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_gravity="right"
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/btn_crop"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_crop_white"/>
+            <ImageButton
+                android:id="@+id/btn_rotate"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:src="@drawable/icon_rotate_white"/>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
             <ImageButton
                 android:id="@+id/btn_undo"
                 android:layout_width="50dp"
