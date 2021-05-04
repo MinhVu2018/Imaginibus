@@ -9,6 +9,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -32,6 +33,8 @@ import com.example.imaginibus.Dialog.StickerDialog;
 import com.example.imaginibus.Dialog.TextDialog;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -45,16 +48,15 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.ViewType;
 
 public class EditImage extends AppCompatActivity
-        implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener, EmojiDialog.EmojiDialogListener, StickerDialog.StickerDialogListener {
+                    implements BrushDialog.BrushDialogListener, TextDialog.TextDialogListener, EmojiDialog.EmojiDialogListener, StickerDialog.StickerDialogListener {
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
-    ImageButton btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_sticker, btn_emoji, btn_cancel, btn_save;
+    ImageButton btn_crop, btn_rotate, btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_sticker, btn_emoji, btn_cancel, btn_save;
     TextView cur_editor;
     static int size = 0, opacity = 100, brush_color = Color.BLACK, text_color = Color.BLACK;
     static String text;
     View cur_view;
-    static String filePath = "/storage/emulated/0/DCIM/Imaginibus/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class EditImage extends AppCompatActivity
 
         //setup
         photoEditorView = findViewById(R.id.photoEditorView);
+        btn_crop = findViewById(R.id.btn_crop);
+        btn_rotate = findViewById(R.id.btn_rotate);
         btn_undo = findViewById(R.id.btn_undo);
         btn_redo = findViewById(R.id.btn_redo);
         btn_brush = findViewById(R.id.btn_brush);
@@ -112,6 +116,20 @@ public class EditImage extends AppCompatActivity
     }
 
     private void setUpButton() {
+        btn_crop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(EditImage.this);
+            }
+        });
+        btn_rotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         btn_undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -262,6 +280,21 @@ public class EditImage extends AppCompatActivity
             View decorView = getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    // crop image
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                photoEditorView.getSource().setImageURI(Uri.parse(cur_img.getImageUrl()));
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
     }
 
