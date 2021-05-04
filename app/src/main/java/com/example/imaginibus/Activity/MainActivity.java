@@ -75,10 +75,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-        //start service
-        Intent intent = new Intent(MainActivity.this, FaceDetection.class);
-        startService(intent);
-
         //load the content
         setContentView(R.layout.activity_main);
         SetUpButton();
@@ -181,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.btn_sync:
+                refresh();
             case R.id.btn_language_english:
                 setLocale("en-us");
                 saveLocale("en-us");
@@ -198,8 +196,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 saveTheme(false);
                 break;
             case R.id.btn_face_group:
-                Intent intent = new Intent(MainActivity.this, FaceGroup.class);
-                startActivity(intent);
+                if (((MyApplication) this.getApplication()).listIdImage == null) {
+                    //start service
+                    Intent intent = new Intent(MainActivity.this, FaceDetection.class);
+                    startService(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, FaceGroup.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.btn_camera:
                 Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
@@ -260,6 +264,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
         String fav_list = shp.getString("FAVORITE_LIST", null);
+        int current_layout = shp.getInt("LAYOUT", 0);
+
+        //load favorite list
         if (fav_list != null) {
             Type type = new TypeToken<List<ImageModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFavorite(gson.fromJson(fav_list, type));
@@ -267,8 +274,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             ((MyApplication) this.getApplication()).setListFavorite(new ArrayList<>());
         }
 
+        //load theme
         Configuration config = new Configuration();
-
         if (theme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             config.uiMode = Configuration.UI_MODE_NIGHT_YES;
@@ -278,11 +285,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             config.uiMode = Configuration.UI_MODE_NIGHT_NO;
         }
 
+        //load language
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         config.locale = locale;
-
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        //load layout
+        ((MyApplication) this.getApplication()).currentLayout = current_layout;
     }
 
     private void externalReadImage() {

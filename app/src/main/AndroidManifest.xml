@@ -27,7 +27,6 @@
         <activity android:name=".Activity.FaceGroup" />
         <activity android:name=".Activity.EditImage" />
         <activity android:name=".Activity.ViewVideo" />
-        <activity android:name=".Activity.FavoriteLayoutA" />
         <activity android:name=".Activity.ViewImage" />
         <activity android:name=".Activity.SecureCode" />
         <activity android:name=".Activity.EnterPassword" />

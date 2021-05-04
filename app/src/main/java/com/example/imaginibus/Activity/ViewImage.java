@@ -156,12 +156,14 @@ public class ViewImage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //user need to sync to see the different!!, still need to consider this
         ImageButton btn_delete = findViewById(R.id.btn_delete);
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //delete in external storage
                 deleteImage(new File(listImage.get(cur_img_position).getImageUrl()));
-                listImage.remove(listImage.get(cur_img_position));
                 Toast.makeText(ViewImage.this, "Xóa gòi đó", Toast.LENGTH_SHORT).show();
                 finish();
             }

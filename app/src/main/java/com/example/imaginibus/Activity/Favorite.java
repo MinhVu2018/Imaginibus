@@ -2,9 +2,12 @@ package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +17,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.imaginibus.Adapter.ImageAdapter;
+import com.example.imaginibus.Adapter.ImageLinearAdapter;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.example.imaginibus.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
@@ -41,23 +46,39 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
         //setup the title if it is an album
         if (getIntent().hasExtra("Title")) {
             title.setText(getIntent().getStringExtra("Title"));
-
             listImage = (List<ImageModel>) getIntent().getSerializableExtra("List Image");
-            listImageView.setLayoutManager(new GridLayoutManager(this, 3));
-            ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
-            listImageView.setAdapter(imageAdapter);
+            if (((MyApplication) this.getApplication()).currentLayout == 0) {
+                setupAdapterGridLayout();
+            } else {
+                setupAdapterLinearLayout();
+            }
             num_img.setText(String.valueOf(listImage.size()) + " ");
         } else {
             if (((MyApplication) this.getApplication()).getListFavorite().size() > 0) {
-                listImageView.setLayoutManager(new GridLayoutManager(this, 3));
-                ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, ((MyApplication) this.getApplication()).getListFavorite());
-                listImageView.setAdapter(imageAdapter);
+                listImage = ((MyApplication) this.getApplication()).getListFavorite();
+                if (((MyApplication) this.getApplication()).currentLayout == 0) {
+                    setupAdapterGridLayout();
+                } else {
+                    setupAdapterLinearLayout();
+                }
             }
             num_img.setText(String.valueOf(((MyApplication) this.getApplication()).getListFavorite().size()) + " ");
         }
 
         //set up the buttons
         SetUpButton();
+    }
+
+    private void setupAdapterGridLayout() {
+        listImageView.setLayoutManager(new GridLayoutManager(this, 3));
+        ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
+        listImageView.setAdapter(imageAdapter);
+    }
+
+    private void setupAdapterLinearLayout() {
+        listImageView.setLayoutManager(new LinearLayoutManager(this));
+        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, R.id.list_image, listImage);
+        listImageView.setAdapter(imageLinearAdapter);
     }
 
     private void SetUpButton() {
@@ -87,7 +108,27 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        return false;
+        switch (item.getItemId()) {
+            case R.id.btn_layout:
+                ((MyApplication) this.getApplication()).currentLayout = Math.abs(((MyApplication) this.getApplication()).currentLayout - 1);
+                Intent intent = new Intent(Favorite.this, Favorite.class);
+                if (getIntent().hasExtra("Title")) {
+                    intent.putExtra("Title", getIntent().getStringExtra("Title"));
+                    intent.putExtra("List Image", (Serializable) listImage);
+                }
+                saveLayout();
+                startActivity(intent);
+                finish();
+                break;
+        }
+
+        return true;
     }
 
+    public void saveLayout() {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("LAYOUT", ((MyApplication) this.getApplication()).currentLayout);
+        editor.commit();
+    }
 }

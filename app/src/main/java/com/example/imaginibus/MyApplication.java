@@ -16,6 +16,7 @@ public class MyApplication extends Application {
     private List<VideoModel> listVideo;
     private List<ImageModel> listFavorite;
     public Hashtable<Integer, List<Integer>> listIdImage;
+    public int currentLayout;
 
     public boolean setListImage(List<ImageModel> listImagePath) {
         this.listImage = listImagePath;
