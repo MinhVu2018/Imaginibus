@@ -86,6 +86,16 @@
             app:srcCompat="@drawable/icon_share_white" />
 
         <ImageButton
+            android:id="@+id/btn_copy"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/icon_copy_white" />
+
+        <ImageButton
             android:id="@+id/btn_edit"
             android:layout_width="0dp"
             android:layout_height="30dp"

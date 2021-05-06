@@ -9,8 +9,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -78,6 +82,9 @@ public class ViewImage extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
 
+        //set registerForContextMenu
+        registerForContextMenu(viewPager);
+
         String img_path = getIntent().getStringExtra("img_path");
         for (cur_img_position = 0; cur_img_position<listImage.size(); cur_img_position++) {
             if (("file://" + listImage.get(cur_img_position).getImageUrl()).equals(img_path))
@@ -89,6 +96,47 @@ public class ViewImage extends AppCompatActivity {
 
         //setup button
         setupButton();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FullScreencall();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        FullScreencall();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.image_option_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.copy_image:
+                copyImage();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public void FullScreencall() {
+        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if(Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
     public void setUp(){
@@ -150,36 +198,16 @@ public class ViewImage extends AppCompatActivity {
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(ViewImage.this.getContentResolver() , Uri.fromFile(new File(cur_img.getImageUrl())));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    File file = new File(getApplicationContext().getExternalCacheDir(), File.separator +"image that you wants to share");
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                    fOut.flush();
-                    fOut.close();
-                    file.setReadable(true, false);
-                    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    File imageFileToShare = new File(cur_img.getImageUrl());
-                    Uri imageUri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                            BuildConfig.APPLICATION_ID + ".provider", imageFileToShare);
-
-                    intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.setType("image/*");
-
-                    startActivity(Intent.createChooser(intent, "Share image via"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                shareImage();
 //                Toast.makeText(ViewImage.this, "Share deeeeeeeee", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageButton btn_copy = findViewById(R.id.btn_copy);
+        btn_copy.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                copyImage();
             }
         });
 
@@ -322,6 +350,38 @@ public class ViewImage extends AppCompatActivity {
         return(tag + ": " + exif.getAttribute(tag) + "\n");
     }
 
+    private void shareImage(){
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(ViewImage.this.getContentResolver() , Uri.fromFile(new File(cur_img.getImageUrl())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            File file = new File(getApplicationContext().getExternalCacheDir(), File.separator +"image that you wants to share");
+            FileOutputStream fOut = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            file.setReadable(true, false);
+            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            File imageFileToShare = new File(cur_img.getImageUrl());
+            Uri imageUri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", imageFileToShare);
+
+            intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setType("image/*");
+
+            startActivity(Intent.createChooser(intent, "Share image via"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void deleteImage(File file) {
         // Set up the projection (we only need the ID)
         String[] projection = {MediaStore.Images.Media._ID};
@@ -345,4 +405,14 @@ public class ViewImage extends AppCompatActivity {
         c.close();
     }
 
+    private void copyImage(){
+        Uri uri = FileProvider.getUriForFile(
+                this,
+                BuildConfig.APPLICATION_ID + ".provider",
+                new File(cur_img.getImageUrl()));
+        ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
+        mClipboard.setPrimaryClip(clip);
+        Toast.makeText(this,"Image copied to clipboard",Toast.LENGTH_SHORT).show();
+    }
 }

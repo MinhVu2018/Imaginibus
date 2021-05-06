@@ -6,20 +6,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.effect.EffectFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,8 +31,8 @@ import com.example.imaginibus.Dialog.StickerDialog;
 import com.example.imaginibus.Dialog.TextDialog;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,9 +40,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import ja.burhanrashid52.photoeditor.CustomEffect;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
+import ja.burhanrashid52.photoeditor.PhotoFilter;
 import ja.burhanrashid52.photoeditor.ViewType;
 
 public class EditImage extends AppCompatActivity
@@ -52,11 +52,12 @@ public class EditImage extends AppCompatActivity
     PhotoEditorView photoEditorView;
     PhotoEditor photoEditor;
     ImageModel cur_img;
-    ImageButton btn_crop, btn_rotate, btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_sticker, btn_emoji, btn_cancel, btn_save;
+    ImageButton btn_crop, btn_rotate, btn_undo, btn_redo, btn_brush, btn_text, btn_erase, btn_filter, btn_sticker, btn_emoji, btn_cancel, btn_save;
     TextView cur_editor;
     static int size = 0, opacity = 100, brush_color = Color.BLACK, text_color = Color.BLACK;
     static String text;
     View cur_view;
+    static int cur_angle = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class EditImage extends AppCompatActivity
         btn_brush = findViewById(R.id.btn_brush);
         btn_text = findViewById(R.id.btn_text);
         btn_erase = findViewById(R.id.btn_erase);
+        btn_filter = findViewById(R.id.btn_filter);
         btn_sticker = findViewById(R.id.btn_sticker);
         btn_emoji = findViewById(R.id.btn_emoji);
         btn_cancel = findViewById(R.id.btn_cancel);
@@ -95,6 +97,18 @@ public class EditImage extends AppCompatActivity
 
         setupEditor();
         setUpButton();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FullScreencall();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        FullScreencall();
     }
 
     private void setupEditor() {
@@ -119,15 +133,22 @@ public class EditImage extends AppCompatActivity
         btn_crop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(EditImage.this);
+//                CropImage.activity()
+//                        .setGuidelines(CropImageView.Guidelines.ON)
+//                        .start(EditImage.this);
+                cur_editor.setText("Crop");
             }
         });
         btn_rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                cur_editor.setText("Rotate");
+                if (cur_angle == 360)
+                    cur_angle = 0;
+                CustomEffect customEffect = new CustomEffect.Builder(EffectFactory.EFFECT_ROTATE)
+                        .setParameter("angle", cur_angle += 90)
+                        .build();
+                photoEditor.setFilterEffect(customEffect);
             }
         });
         btn_undo.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +227,26 @@ public class EditImage extends AppCompatActivity
                 photoEditor.brushEraser();
             }
         });
+        btn_filter.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                cur_editor.setText("Filter");
+//                photoEditor.setFilterEffect(PhotoFilter.BRIGHTNESS);
+
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(EditImage.this, R.style.BottomSheetDialogTheme);
+                View bottomSheetView = LayoutInflater.from(getApplicationContext())
+                                                .inflate (R.layout.filter_dialog, findViewById(R.id.list_filter));
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+                bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        FullScreencall();
+                    }
+                });
+                setUpFilter(bottomSheetDialog, bottomSheetView);
+            }
+        });
         btn_sticker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,7 +312,7 @@ public class EditImage extends AppCompatActivity
         });
     }
 
-    public void FullScreencall() {
+    private void FullScreencall() {
         if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
             View v = this.getWindow().getDecorView();
             v.setSystemUiVisibility(View.GONE);
@@ -346,4 +387,133 @@ public class EditImage extends AppCompatActivity
         FullScreencall();
     }
 
+    // filter editor
+    private void setUpFilter(BottomSheetDialog dialog, View view){
+        ImageButton btn_none = view.findViewById(R.id.filter_none);
+        btn_none.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.NONE);
+            }
+        });
+
+        ImageButton btn_autofix = view.findViewById(R.id.filter_autofix);
+        btn_autofix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.AUTO_FIX);
+            }
+        });
+        ImageButton btn_brightness = view.findViewById(R.id.filter_brightness);
+        btn_brightness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.BRIGHTNESS);
+            }
+        });
+
+        ImageButton btn_constrast = view.findViewById(R.id.filter_constrast);
+        btn_constrast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.CONTRAST);
+            }
+        });
+
+        ImageButton btn_black_white = view.findViewById(R.id.filter_black_white);
+        btn_black_white.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.BLACK_WHITE);
+            }
+        });
+
+        ImageButton btn_cross_process = view.findViewById(R.id.filter_cross_process);
+        btn_cross_process.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.CROSS_PROCESS);
+            }
+        });
+
+        ImageButton btn_documentary = view.findViewById(R.id.filter_documentary);
+        btn_documentary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.DOCUMENTARY);
+            }
+        });
+
+        ImageButton btn_due_tone = view.findViewById(R.id.filter_due_tone);
+        btn_due_tone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.DUE_TONE);
+            }
+        });
+
+        ImageButton btn_fish_eye = view.findViewById(R.id.filter_fish_eye);
+        btn_fish_eye.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.FISH_EYE);
+            }
+        });
+
+        ImageButton btn_flip_horizontal = view.findViewById(R.id.filter_flip_horizontal);
+        btn_flip_horizontal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.FLIP_HORIZONTAL);
+            }
+        });
+
+        ImageButton btn_flip_vertical = view.findViewById(R.id.filter_flip_vertical);
+        btn_flip_vertical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.FLIP_VERTICAL);
+            }
+        });
+
+        ImageButton btn_gray_scale = view.findViewById(R.id.filter_gray_scale);
+        btn_gray_scale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.GRAY_SCALE);
+            }
+        });
+
+        ImageButton btn_negative = view.findViewById(R.id.filter_negative);
+        btn_negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.NEGATIVE);
+            }
+        });
+
+        ImageButton btn_sepia = view.findViewById(R.id.filter_sepia);
+        btn_sepia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.SEPIA);
+            }
+        });
+
+        ImageButton btn_sharpen = view.findViewById(R.id.filter_sharpen);
+        btn_sharpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.SHARPEN);
+            }
+        });
+
+        ImageButton btn_vignette = view.findViewById(R.id.filter_vignette);
+        btn_vignette.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoEditor.setFilterEffect(PhotoFilter.VIGNETTE);
+            }
+        });
+    }
 }

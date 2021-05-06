@@ -44,4 +44,5 @@
     <string name="btn_share">Share</string>
     <string name="btn_edit">Edit</string>
     <string name="btn_delete">Delete</string>
+    <string name="btn_copy">Copy</string>
 </resources>

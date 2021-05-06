@@ -4,6 +4,5 @@
 
     <item
         android:id="@+id/btn_layout"
-        android:title="@string/btn_layout"
-        app:showAsAction="ifRoom" />
+        android:title="@string/btn_copy"/>
 </menu>

@@ -1,18 +1,33 @@
 package com.example.imaginibus.View;
 
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
+import com.example.imaginibus.Activity.EditImage;
+import com.example.imaginibus.Activity.ViewImage;
+import com.example.imaginibus.BuildConfig;
 import com.example.imaginibus.R;
+
+import java.io.File;
 
 public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
@@ -186,7 +201,6 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
 
     @Override
     public void onLongPress(MotionEvent e) {
-
     }
 
     @Override

@@ -2,3 +2,6 @@ swipe: viewpager
 zoom: touch...
 
 https://stackoverflow.com/questions/59114620/how-to-set-wallpaper-as-lockscreen-or-bothhome-and-lock 
+
+https://developer.android.com/reference/android/media/effect/EffectFactory#EFFECT_CROP
+https://viblo.asia/p/android-chinh-sua-anh-voi-effect-PdbknLzxGyA
