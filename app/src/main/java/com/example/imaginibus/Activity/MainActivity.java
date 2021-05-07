@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -196,14 +198,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 saveTheme(false);
                 break;
             case R.id.btn_face_group:
-                if (((MyApplication) this.getApplication()).listIdImage == null) {
-                    //start service
-                    Intent intent = new Intent(MainActivity.this, FaceDetection.class);
-                    startService(intent);
-                } else {
-                    Intent intent = new Intent(MainActivity.this, FaceGroup.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MainActivity.this, FaceGroup.class);
+                startActivity(intent);
                 break;
             case R.id.btn_camera:
                 Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
@@ -264,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
         String fav_list = shp.getString("FAVORITE_LIST", null);
+        String face_list = shp.getString("FACE_LIST", null);
         int current_layout = shp.getInt("LAYOUT", 0);
 
         //load favorite list
@@ -272,6 +269,17 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             ((MyApplication) this.getApplication()).setListFavorite(gson.fromJson(fav_list, type));
         } else {
             ((MyApplication) this.getApplication()).setListFavorite(new ArrayList<>());
+        }
+
+        //is face list exist
+        if (fav_list != null) {
+            Type type = new TypeToken<List<AlbumModel>>(){}.getType();
+            ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
+        } else {
+            if (!isMyServiceRunning(FaceDetection.class)) {
+                Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
+                startService(faceService);
+            }
         }
 
         //load theme
@@ -404,4 +412,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         return result;
     };
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

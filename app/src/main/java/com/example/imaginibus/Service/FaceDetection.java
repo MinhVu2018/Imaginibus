@@ -2,6 +2,7 @@ package com.example.imaginibus.Service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.imaginibus.FaceComparator;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,14 +29,18 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
 public class FaceDetection extends Service {
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
+    List<Boolean> listFace;
     FaceDetector detector;
+    HashMap<Integer, Rect> faceRect;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -44,7 +50,9 @@ public class FaceDetection extends Service {
 
         public void handleMessage(Message msg) {
             // Normally we would do some work here, like download a file.
-            ((MyApplication) FaceDetection.this.getApplication()).listIdImage = new Hashtable<>();
+            listFace = new ArrayList<>();
+            faceRect = new HashMap<>();
+
             faceDetecting();
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
@@ -74,7 +82,7 @@ public class FaceDetection extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Start detecting faces", Toast.LENGTH_LONG).show();
 
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
@@ -87,16 +95,20 @@ public class FaceDetection extends Service {
     }
 
     public void onDestroy() {
-        Toast.makeText(this, "Face detection completed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Face detection completed", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Start grouping faces", Toast.LENGTH_LONG).show();
+        Intent groupingService = new Intent(FaceDetection.this, FaceGrouping.class);
+        groupingService.putExtra("AVAILABLE_FACES", (Serializable) listFace);
+        groupingService.putExtra("FACES_RECT", faceRect);
+        startService(groupingService);
     }
 
     private void faceDetecting() {
         //Step 1, configure the face detector
         FaceDetectorOptions faceDetectorOptions = new FaceDetectorOptions.Builder()
-                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
                 .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
                 .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
-                .enableTracking()
                 .build();
 
         //Step 2, get an instance of face detector
@@ -110,7 +122,7 @@ public class FaceDetection extends Service {
         //get all image of the computer
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
 
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<20; i++) {
             //get the image
             ImageModel imageModel = allImage.get(i);
 
@@ -134,18 +146,19 @@ public class FaceDetection extends Service {
                         new OnSuccessListener<List<Face>>() {
                             @Override
                             public void onSuccess(List<Face> faces) {
-                                List<Integer> listId = new ArrayList<>();
-                                for (Face face : faces) {
-                                    listId.add(face.getTrackingId());
+                                if (faces.size() != 0) {
+                                    listFace.add(true);
+                                    faceRect.put(listFace.size() - 1, faces.get(0).getBoundingBox());
+                                } else {
+                                    listFace.add(false);
                                 }
-                                ((MyApplication) FaceDetection.this.getApplication()).listIdImage.put(((MyApplication) FaceDetection.this.getApplication()).listIdImage.size(), listId);
                             }
                         })
                 .addOnFailureListener(
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                ((MyApplication) FaceDetection.this.getApplication()).listIdImage.put(((MyApplication) FaceDetection.this.getApplication()).listIdImage.size(), null);
+                                e.printStackTrace();
                             }
                         })
                 .addOnCompleteListener(
@@ -156,5 +169,4 @@ public class FaceDetection extends Service {
                             }
                         });
     }
-
 }

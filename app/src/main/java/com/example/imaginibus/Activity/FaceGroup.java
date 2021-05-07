@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -56,7 +57,7 @@ public class FaceGroup extends AppCompatActivity {
 
         //setup resource
         setupButton();
-        setupAlbum();
+        //setupAlbum();
 
         //setup adapter, view
         numImage = findViewById(R.id.num_images);
@@ -84,10 +85,10 @@ public class FaceGroup extends AppCompatActivity {
 
 
 
-    private void setupAlbum() {
+    /*private void setupAlbum() {
         //get all image and it key set
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
-        Set<Integer> faceIdKey = ((MyApplication) this.getApplication()).listIdImage.keySet();
+        Set<Integer> faceIdKey = ((MyApplication) this.getApplication()).listFace.keySet();
         listImageFace = new ArrayList<>();
 
         //not found face
@@ -96,7 +97,7 @@ public class FaceGroup extends AppCompatActivity {
 
         for (int key : faceIdKey) {
             //get list of face id in an image
-            List<Integer> faceIdVal = ((MyApplication) this.getApplication()).listIdImage.get(key);
+            List<Integer> faceIdVal = ((MyApplication) this.getApplication()).listFace.get(key);
             //if not exists a face, add to not found album
             if (faceIdVal.size() == 0) {
                 listImageFace.get(0).addImage(allImage.get(key));
@@ -117,5 +118,5 @@ public class FaceGroup extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 }

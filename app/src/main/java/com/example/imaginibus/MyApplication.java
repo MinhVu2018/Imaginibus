@@ -1,6 +1,7 @@
 package com.example.imaginibus;
 
 import android.app.Application;
+import android.graphics.Rect;
 
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
@@ -15,7 +16,7 @@ public class MyApplication extends Application {
     private List<AlbumModel> listAlbum;
     private List<VideoModel> listVideo;
     private List<ImageModel> listFavorite;
-    public Hashtable<Integer, List<Integer>> listIdImage;
+    private List<AlbumModel> listFace;
     public int currentLayout;
 
     public boolean setListImage(List<ImageModel> listImagePath) {
@@ -35,6 +36,11 @@ public class MyApplication extends Application {
 
     public boolean setListFavorite(List<ImageModel> listFavorite) {
         this.listFavorite = listFavorite;
+        return true;
+    }
+
+    public boolean setListFace(List<AlbumModel> listFace) {
+        this.listFace = listFace;
         return true;
     }
 
