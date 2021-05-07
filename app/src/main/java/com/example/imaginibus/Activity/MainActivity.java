@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.example.imaginibus.Adapter.ListAlbumAdapter;
 import com.example.imaginibus.Model.AlbumModel;
@@ -198,8 +199,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 saveTheme(false);
                 break;
             case R.id.btn_face_group:
-                Intent intent = new Intent(MainActivity.this, FaceGroup.class);
-                startActivity(intent);
+                if (((MyApplication) this.getApplication()).getListFace() != null) {
+                    Intent intent = new Intent(MainActivity.this, FaceGroup.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Face grouping is working, please comeback later!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btn_camera:
                 Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
@@ -272,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
 
         //is face list exist
-        if (fav_list != null) {
+        if (face_list != null) {
             Type type = new TypeToken<List<AlbumModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
         } else {

@@ -80,4 +80,5 @@ public class MyApplication extends Application {
     public List<AlbumModel> getListAlbum() { return listAlbum; }
     public List<VideoModel> getListVideo() { return listVideo; }
     public List<ImageModel> getListFavorite() { return listFavorite; }
+    public List<AlbumModel> getListFace() {return listFace; }
 }

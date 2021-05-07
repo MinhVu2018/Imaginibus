@@ -122,7 +122,7 @@ public class FaceDetection extends Service {
         //get all image of the computer
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
 
-        for (int i=0; i<20; i++) {
+        for (int i=0; i<80; i++) {
             //get the image
             ImageModel imageModel = allImage.get(i);
 

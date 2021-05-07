@@ -1,61 +1,48 @@
 package com.example.imaginibus.Service;
 
-import android.app.Service;
+import android.app.Activity;
+import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.IBinder;
-import android.util.JsonReader;
-import android.util.Log;
 
 
+import androidx.annotation.Nullable;
 
 import com.example.imaginibus.FaceComparator;
+import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.MyApplication;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
-public class FaceGrouping extends Service {
+public class FaceGrouping extends IntentService {
     HashMap<String, String> faceApiKey;
     String faceApiUrl;
     List<Boolean> listFace;
     List<ImageModel> listAllImage;
     HashMap<Integer, Rect> faceRect;
+    List<AlbumModel> listAlbumFace;
+    List<Integer> checkedImage;
 
-    @Override
-    public void onCreate() {
+    public FaceGrouping() {
+        super("FaceGrouping");
+
         faceApiKey = new HashMap<>();
         faceApiKey.put("api_key", "5Csi1FBARPtwqyri_ddAf8q_ETH1ufQm");
         faceApiKey.put("api_secret", "I3TQFdu9GieiJDvz9pdYjnSpXD-tc5Re");
         faceApiUrl = "https://api-us.faceplusplus.com/facepp/v3/compare";
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-        listFace = (List<Boolean>) intent.getSerializableExtra("AVAILABLE_FACES");
-        faceRect = (HashMap<Integer, Rect>) intent.getSerializableExtra("FACES_RECT");
-        listAllImage = ((MyApplication) this.getApplication()).getListImage();
-
-        for (int i = 0; i<listFace.size(); i++) {
-            if (listFace.get(i)) {
-                for (int j = i + 1; j<listFace.size(); j++) {
-                    if (listFace.get(j)) {
-                        compareTwoImage(listAllImage.get(i), listAllImage.get(j), faceRect.get(i), faceRect.get(j));
-                    }
-                }
-            }
-        }
+        listAlbumFace = new ArrayList<>();
+        checkedImage = new ArrayList<>();
     }
 
     @Override
@@ -63,7 +50,39 @@ public class FaceGrouping extends Service {
         return null;
     }
 
-    private void compareTwoImage(ImageModel imageOne, ImageModel imageTwo, Rect imgOne, Rect imgTwo) {
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        listFace = (List<Boolean>) intent.getSerializableExtra("AVAILABLE_FACES");
+        faceRect = (HashMap<Integer, Rect>) intent.getSerializableExtra("FACES_RECT");
+        listAllImage = ((MyApplication) this.getApplication()).getListImage();
+
+        for (int i = 0; i<listFace.size(); i++) {
+            //if this image is checked --> continue
+            if (checkedImage.contains(i))
+                continue;
+            else checkedImage.add(i);
+
+            //if this image contain a face
+            if (listFace.get(i)) {
+                //create a new album for that image
+                listAlbumFace.add(new AlbumModel(listAllImage.get(i),"Person " + (listAlbumFace.size() + 1)));
+
+                //find all relevant without checked
+                for (int j = i + 1; j<listFace.size(); j++) {
+                    if (checkedImage.contains(j))
+                        continue;
+
+                    if (listFace.get(j))
+                        compareTwoImage(listAllImage.get(i), listAllImage.get(j), faceRect.get(i), faceRect.get(j), i, j, listAlbumFace.size() - 1);
+                }
+            }
+        }
+
+        ((MyApplication) this.getApplication()).setListFace(listAlbumFace);
+        saveFaceGroup();
+    }
+
+    private synchronized void compareTwoImage(ImageModel imageOne, ImageModel imageTwo, Rect imgOne, Rect imgTwo, int posOne, int posTwo, int curAlbum) {
         FaceComparator faceComparator = new FaceComparator();
 
         //insert image to bit map
@@ -99,19 +118,28 @@ public class FaceGrouping extends Service {
         byteMap.put("image_file1", buffOne);
         byteMap.put("image_file2", buffTwo);
 
-        //must post in a thread, if not it will have exception
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    byte[] bacd = faceComparator.post(faceApiUrl, faceApiKey, byteMap);
-                    String str = new String(bacd);
-                    JSONObject object = new JSONObject(str);
-                    int confidence = object.getInt("confidence");
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try{
+            byte[] result = faceComparator.post(faceApiUrl, faceApiKey, byteMap);
+            String str = new String(result);
+            JSONObject object = new JSONObject(str);
+            int confidence = object.getInt("confidence");
+
+            if (confidence >= 50) {
+                listAlbumFace.get(curAlbum).addImage(imageTwo);
+                //mark the image as checked
+                checkedImage.add(posTwo);
             }
-        }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveFaceGroup() {
+        //SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        editor.putString("FACE_LIST", gson.toJson(listAlbumFace));
+        editor.commit();
     }
 }

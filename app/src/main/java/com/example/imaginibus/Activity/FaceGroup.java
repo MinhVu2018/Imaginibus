@@ -57,17 +57,13 @@ public class FaceGroup extends AppCompatActivity {
 
         //setup resource
         setupButton();
-        //setupAlbum();
+        listImageFace = ((MyApplication) this.getApplication()).getListFace();
 
         //setup adapter, view
         numImage = findViewById(R.id.num_images);
         numImage.setText(String.valueOf(listImageFace.size()) + " ");
         recyclerView = findViewById(R.id.list_album);
-        //debug
-        for (int i=0; i<listImageFace.size(); i++) {
-            Log.i("ID", String.valueOf(i));
-            Log.i("SIZE", String.valueOf(listImageFace.get(i).getListImage().size()));
-        }
+
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, listImageFace);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listAlbumAdapter);
@@ -82,41 +78,4 @@ public class FaceGroup extends AppCompatActivity {
             }
         });
     }
-
-
-
-    /*private void setupAlbum() {
-        //get all image and it key set
-        List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
-        Set<Integer> faceIdKey = ((MyApplication) this.getApplication()).listFace.keySet();
-        listImageFace = new ArrayList<>();
-
-        //not found face
-        AlbumModel albumModel = new AlbumModel(new ArrayList<>(), "Not Found");
-        listImageFace.add(albumModel);
-
-        for (int key : faceIdKey) {
-            //get list of face id in an image
-            List<Integer> faceIdVal = ((MyApplication) this.getApplication()).listFace.get(key);
-            //if not exists a face, add to not found album
-            if (faceIdVal.size() == 0) {
-                listImageFace.get(0).addImage(allImage.get(key));
-            } else {
-                for (int id : faceIdVal) {
-                    boolean exist = false;
-                    for (int j = 0; j < listImageFace.size(); j++) {
-                        if (listImageFace.get(j).getAlbumName().equals(String.valueOf(id))) {
-                            listImageFace.get(j).addImage(allImage.get(key));
-                            exist = true;
-                            break;
-                        }
-                    }
-                    if (!exist) {
-                        albumModel = new AlbumModel(allImage.get(key), String.valueOf(id));
-                        listImageFace.add(albumModel);
-                    }
-                }
-            }
-        }
-    }*/
 }
