@@ -1,7 +1,10 @@
 package com.example.imaginibus.Model;
 
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.provider.MediaStore;
+
+import com.example.imaginibus.Utils.MyRect;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -10,6 +13,9 @@ import java.util.Locale;
 
 public class ImageModel implements Serializable {
     private String[] data;
+    public MyRect rect;
+    public boolean containFace;
+
     // URL, DATE_ADDED, SIZE, WIDTH, HEIGHT, TITLE, BUCKET_DISPLAY_NAME, DISPLAY_NAME;
     private double latitude, longitude;
 
@@ -25,6 +31,9 @@ public class ImageModel implements Serializable {
         this.latitude = latitude;
         this.longitude = longtitude;
     }
+
+    public void setRect(MyRect rect) { this.rect = rect; }
+    public void setContainFace(boolean val) { this.containFace = val; }
     public String getImageUrl() { return data[0]; }
     public String getImageDate() {
         //Date format

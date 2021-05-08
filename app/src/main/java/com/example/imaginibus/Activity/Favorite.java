@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.example.imaginibus.Adapter.ImageAdapter;
 import com.example.imaginibus.Adapter.ImageLinearAdapter;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 
 import java.io.Serializable;
@@ -85,8 +85,7 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Favorite.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 

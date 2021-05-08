@@ -16,7 +16,7 @@
         android:required="true" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".Utils.MyApplication"
         android:allowBackup="true"
         android:configChanges="orientation|screenSize"
         android:icon="@drawable/logo_asset"

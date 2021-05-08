@@ -2,22 +2,20 @@ package com.example.imaginibus.Service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.imaginibus.FaceComparator;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
+import com.example.imaginibus.Utils.MyRect;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,18 +27,13 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 public class FaceDetection extends Service {
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
-    List<Boolean> listFace;
     FaceDetector detector;
-    HashMap<Integer, Rect> faceRect;
+    List<ImageModel> allImage;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -49,10 +42,6 @@ public class FaceDetection extends Service {
         }
 
         public void handleMessage(Message msg) {
-            // Normally we would do some work here, like download a file.
-            listFace = new ArrayList<>();
-            faceRect = new HashMap<>();
-
             faceDetecting();
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
@@ -98,12 +87,13 @@ public class FaceDetection extends Service {
         Toast.makeText(this, "Face detection completed", Toast.LENGTH_LONG).show();
         Toast.makeText(this, "Start grouping faces", Toast.LENGTH_LONG).show();
         Intent groupingService = new Intent(FaceDetection.this, FaceGrouping.class);
-        groupingService.putExtra("AVAILABLE_FACES", (Serializable) listFace);
-        groupingService.putExtra("FACES_RECT", faceRect);
         startService(groupingService);
     }
 
     private void faceDetecting() {
+        //get all image of the computer
+        allImage = ((MyApplication) FaceDetection.this.getApplication()).getListImage();
+
         //Step 1, configure the face detector
         FaceDetectorOptions faceDetectorOptions = new FaceDetectorOptions.Builder()
                 .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
@@ -119,9 +109,6 @@ public class FaceDetection extends Service {
     }
 
     private void faceTracking() {
-        //get all image of the computer
-        List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
-
         for (int i=0; i<80; i++) {
             //get the image
             ImageModel imageModel = allImage.get(i);
@@ -132,14 +119,14 @@ public class FaceDetection extends Service {
                 Uri uri = Uri.fromFile(new File(imageModel.getImageUrl()));
                 image = InputImage.fromFilePath(this, uri);
                 //process image
-                processImage(image);
+                processImage(image, i);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void processImage(InputImage image) {
+    private void processImage(InputImage image, int pos) {
         Task<List<Face>> result;
         result = detector.process(image)
                 .addOnSuccessListener(
@@ -147,10 +134,11 @@ public class FaceDetection extends Service {
                             @Override
                             public void onSuccess(List<Face> faces) {
                                 if (faces.size() != 0) {
-                                    listFace.add(true);
-                                    faceRect.put(listFace.size() - 1, faces.get(0).getBoundingBox());
+                                    allImage.get(pos).setContainFace(true);
+                                    allImage.get(pos).setRect(new MyRect(faces.get(0).getBoundingBox()));
                                 } else {
-                                    listFace.add(false);
+                                    allImage.get(pos).setContainFace(false);
+                                    allImage.get(pos).setRect(null);
                                 }
                             }
                         })

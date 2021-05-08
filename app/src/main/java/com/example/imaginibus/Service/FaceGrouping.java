@@ -12,10 +12,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import com.example.imaginibus.FaceComparator;
+import com.example.imaginibus.Utils.FaceComparator;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
+import com.example.imaginibus.Utils.MyRect;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -28,9 +29,7 @@ import java.util.List;
 public class FaceGrouping extends IntentService {
     HashMap<String, String> faceApiKey;
     String faceApiUrl;
-    List<Boolean> listFace;
     List<ImageModel> listAllImage;
-    HashMap<Integer, Rect> faceRect;
     List<AlbumModel> listAlbumFace;
     List<Integer> checkedImage;
 
@@ -52,28 +51,34 @@ public class FaceGrouping extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        listFace = (List<Boolean>) intent.getSerializableExtra("AVAILABLE_FACES");
-        faceRect = (HashMap<Integer, Rect>) intent.getSerializableExtra("FACES_RECT");
         listAllImage = ((MyApplication) this.getApplication()).getListImage();
 
-        for (int i = 0; i<listFace.size(); i++) {
+        //same as face detection
+        for (int i = 0; i<80; i++) {
             //if this image is checked --> continue
             if (checkedImage.contains(i))
                 continue;
             else checkedImage.add(i);
 
             //if this image contain a face
-            if (listFace.get(i)) {
+            if (listAllImage.get(i).containFace) {
+                //check if that image same with any album
+                if (isImageInAlbum(listAllImage.get(i), i))
+                    continue;
+
                 //create a new album for that image
                 listAlbumFace.add(new AlbumModel(listAllImage.get(i),"Person " + (listAlbumFace.size() + 1)));
 
                 //find all relevant without checked
-                for (int j = i + 1; j<listFace.size(); j++) {
+                for (int j = i + 1; j<80; j++) {
                     if (checkedImage.contains(j))
                         continue;
 
-                    if (listFace.get(j))
-                        compareTwoImage(listAllImage.get(i), listAllImage.get(j), faceRect.get(i), faceRect.get(j), i, j, listAlbumFace.size() - 1);
+                    if (listAllImage.get(j).containFace) {
+                        ImageModel imgOne = listAllImage.get(i);
+                        ImageModel imgTwo = listAllImage.get(j);
+                        compareTwoImage(imgOne, imgTwo, imgOne.rect, imgTwo.rect, j, listAlbumFace.size() - 1);
+                    }
                 }
             }
         }
@@ -82,7 +87,22 @@ public class FaceGrouping extends IntentService {
         saveFaceGroup();
     }
 
-    private synchronized void compareTwoImage(ImageModel imageOne, ImageModel imageTwo, Rect imgOne, Rect imgTwo, int posOne, int posTwo, int curAlbum) {
+    private boolean isImageInAlbum(ImageModel image, int imagePos)  {
+        if (listAlbumFace == null)
+            return false;
+
+        for (AlbumModel album : listAlbumFace) {
+            for (ImageModel item : album.getListImage()) {
+                boolean result = compareTwoImage(item, image,  item.rect, image.rect, imagePos, listAlbumFace.indexOf(album));
+                if (result == true)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean compareTwoImage(ImageModel imageOne, ImageModel imageTwo, MyRect imgOne, MyRect imgTwo, int posTwo, int curAlbum) {
         FaceComparator faceComparator = new FaceComparator();
 
         //insert image to bit map
@@ -124,14 +144,17 @@ public class FaceGrouping extends IntentService {
             JSONObject object = new JSONObject(str);
             int confidence = object.getInt("confidence");
 
-            if (confidence >= 50) {
+            if (confidence >= 60) {
                 listAlbumFace.get(curAlbum).addImage(imageTwo);
                 //mark the image as checked
                 checkedImage.add(posTwo);
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     private void saveFaceGroup() {

@@ -1,5 +1,6 @@
 package com.example.imaginibus.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

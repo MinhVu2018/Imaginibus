@@ -19,11 +19,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -34,17 +32,16 @@ import android.widget.Toast;
 import com.example.imaginibus.Adapter.ListAlbumAdapter;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 import com.example.imaginibus.Service.FaceDetection;
+import com.example.imaginibus.Service.FaceGrouping;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -281,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             Type type = new TypeToken<List<AlbumModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
         } else {
-            if (!isMyServiceRunning(FaceDetection.class)) {
+            if (!isMyServiceRunning(FaceDetection.class) || !isMyServiceRunning(FaceGrouping.class)) {
                 Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
                 startService(faceService);
             }

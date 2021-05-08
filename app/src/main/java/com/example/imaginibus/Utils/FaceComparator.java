@@ -1,4 +1,4 @@
-package com.example.imaginibus;
+package com.example.imaginibus.Utils;
 
 import android.os.AsyncTask;
 

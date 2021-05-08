@@ -1,7 +1,6 @@
 package com.example.imaginibus.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imaginibus.Model.ByDateModel;
-import com.example.imaginibus.ImageListDecoration;
+import com.example.imaginibus.Utils.ImageListDecoration;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 

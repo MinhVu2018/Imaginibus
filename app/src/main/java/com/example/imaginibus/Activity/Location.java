@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -17,7 +15,7 @@ import android.widget.ImageButton;
 import com.example.imaginibus.Adapter.ListAlbumAdapter;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 
 import java.io.IOException;

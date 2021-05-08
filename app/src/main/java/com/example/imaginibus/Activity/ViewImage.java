@@ -1,7 +1,6 @@
 package com.example.imaginibus.Activity;
 
 import androidx.annotation.RequiresApi;
-import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -19,15 +18,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +35,7 @@ import android.widget.Toast;
 import com.example.imaginibus.Adapter.ImageViewAdapter;
 import com.example.imaginibus.BuildConfig;
 import com.example.imaginibus.Model.ImageModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 import com.google.gson.Gson;
 

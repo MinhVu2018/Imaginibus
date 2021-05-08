@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.imaginibus.Adapter.ByDateAdapter;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 
 public class ByDate extends AppCompatActivity {

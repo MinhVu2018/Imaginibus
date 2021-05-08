@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -17,17 +16,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.imaginibus.Adapter.VideoAdapter;
-import com.example.imaginibus.Model.AlbumModel;
-import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Model.VideoModel;
-import com.example.imaginibus.MyApplication;
+import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
