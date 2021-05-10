@@ -23,7 +23,7 @@
     <string name="btn_layout">Thay đổi layout</string>
     <string name="btn_detail">Thông tin chi tiết</string>
     <string name="btn_tag">Gắn thẻ</string>
-    <string name="btn_secure">Thêm xóa khỏi mục Bảo mật</string>
+    <string name="btn_secure">Thêm/Xóa khỏi mục Bảo mật</string>
     <string name="btn_background">Đặt làm ảnh nền</string>
     <string name="btn_face_detect">Danh sách theo người</string>
 

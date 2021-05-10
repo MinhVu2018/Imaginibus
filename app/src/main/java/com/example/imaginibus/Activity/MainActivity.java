@@ -268,9 +268,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         //load favorite list
         if (fav_list != null) {
             Type type = new TypeToken<List<ImageModel>>(){}.getType();
-            ((MyApplication) this.getApplication()).setListFavorite(gson.fromJson(fav_list, type));
+            ((MyApplication) this.getApplication()).setListImageFavorite(gson.fromJson(fav_list, type));
         } else {
-            ((MyApplication) this.getApplication()).setListFavorite(new ArrayList<>());
+            ((MyApplication) this.getApplication()).setListImageFavorite(new ArrayList<>());
         }
 
         //is face list exist

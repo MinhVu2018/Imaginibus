@@ -54,15 +54,15 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
             }
             num_img.setText(String.valueOf(listImage.size()) + " ");
         } else {
-            if (((MyApplication) this.getApplication()).getListFavorite().size() > 0) {
-                listImage = ((MyApplication) this.getApplication()).getListFavorite();
+            if (((MyApplication) this.getApplication()).getListImageFavorite().size() > 0) {
+                listImage = ((MyApplication) this.getApplication()).getListImageFavorite();
                 if (((MyApplication) this.getApplication()).currentLayout == 0) {
                     setupAdapterGridLayout();
                 } else {
                     setupAdapterLinearLayout();
                 }
             }
-            num_img.setText(String.valueOf(((MyApplication) this.getApplication()).getListFavorite().size()) + " ");
+            num_img.setText(String.valueOf(((MyApplication) this.getApplication()).getListImageFavorite().size()) + " ");
         }
 
         //set up the buttons
