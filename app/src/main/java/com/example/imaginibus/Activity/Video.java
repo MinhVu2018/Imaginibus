@@ -41,7 +41,7 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         //load id
         listVideoView = findViewById(R.id.list_video);
         listVideoView.setLayoutManager(new GridLayoutManager(this, 3));
-        VideoAdapter videoAdapter = new VideoAdapter(this, R.id.list_video, ((MyApplication) this.getApplication()).getListVideo());
+        VideoAdapter videoAdapter = new VideoAdapter(this, ((MyApplication) this.getApplication()).getListVideo());
         listVideoView.setAdapter(videoAdapter);
         numVideo = findViewById(R.id.num_videos);
         numVideo.setText(String.valueOf(((MyApplication) this.getApplication()).getListVideo().size()) + " ");

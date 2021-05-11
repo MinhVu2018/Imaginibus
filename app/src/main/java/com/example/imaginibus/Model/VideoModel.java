@@ -8,6 +8,5 @@ public class VideoModel implements Serializable {
     public VideoModel(String path) {
         this.path = path;
     }
-
     public String getPath() { return path; }
 }

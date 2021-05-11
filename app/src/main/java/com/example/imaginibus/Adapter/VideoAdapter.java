@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.imaginibus.Activity.ViewImage;
 import com.example.imaginibus.Activity.ViewVideo;
 import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.R;
@@ -26,7 +24,7 @@ public class VideoAdapter extends RecyclerView.Adapter {
     private List<VideoModel> items;
     private Context context;
 
-    public VideoAdapter(Context context, int id, List<VideoModel> items) {
+    public VideoAdapter(Context context, List<VideoModel> items) {
         this.items = items;
         this.context = context;
     }

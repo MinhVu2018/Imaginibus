@@ -1,6 +1,7 @@
 package com.example.imaginibus.Adapter;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +9,23 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.imaginibus.Fragment.MyFragment;
 import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.R;
 
 import java.util.ArrayList;
 
-public class VideoViewAdapter extends PagerAdapter {
-    private Context context;
+public class VideoViewAdapter extends SmartFragmentStatePagerAdapter{
     private ArrayList<VideoModel> modelArrayList;
 
-    // constructor
-    public VideoViewAdapter(Context context, ArrayList<VideoModel> modelArrayList){
-        this.context = context;
-        this.modelArrayList = modelArrayList;
+    public VideoViewAdapter(FragmentManager fragmentManager, ArrayList<VideoModel> list) {
+        super(fragmentManager);
+        modelArrayList = list;
     }
 
     @Override
@@ -32,37 +33,9 @@ public class VideoViewAdapter extends PagerAdapter {
         return modelArrayList.size();
     }
 
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view.equals(object);
-    }
-
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        // inflate layout item_video.xml
-        View view = LayoutInflater.from(context).inflate(R.layout.item_video, container, false);
-
-        // init id views
-        VideoView vid = view.findViewById(R.id.view_video);
-
-        // get data
-        VideoModel model = modelArrayList.get(position);
-
-        // set data
-        MediaController mediaController = new MediaController(context);
-        mediaController.setAnchorView(vid);
-        vid.setMediaController(mediaController);
-        vid.setVideoPath(model.getPath());
-        vid.start();
-
-        // add view to container
-        container.addView(view);
-        return view;
-    }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
+    public Fragment getItem(int position) {
+        return MyFragment.newInstance(modelArrayList.get(position).getPath());
     }
 }

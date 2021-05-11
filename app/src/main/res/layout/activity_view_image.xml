@@ -42,6 +42,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+        <TextView
+            android:id="@+id/text_slide"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"/>
+
         <ImageButton
             android:id="@+id/btn_slideshow"
             android:layout_width="30dp"

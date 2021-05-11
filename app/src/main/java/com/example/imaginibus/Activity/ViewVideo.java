@@ -14,45 +14,34 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
 import com.example.imaginibus.Adapter.VideoViewAdapter;
 import com.example.imaginibus.BuildConfig;
-import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.R;
 import com.example.imaginibus.Utils.MyApplication;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ViewVideo extends AppCompatActivity {
     private ViewPager viewPager;
@@ -124,7 +113,7 @@ public class ViewVideo extends AppCompatActivity {
 
     private void setUp(){
         // setup adapter
-        videoAdapter = new VideoViewAdapter(this, listVideo);
+        videoAdapter = new VideoViewAdapter(getSupportFragmentManager(), listVideo);
 
         // set adapter to view pager
         viewPager.setAdapter(videoAdapter);
@@ -139,12 +128,10 @@ public class ViewVideo extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }

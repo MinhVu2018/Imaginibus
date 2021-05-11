@@ -1,16 +1,10 @@
 package com.example.imaginibus.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.ClipData;
@@ -27,7 +21,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.provider.MediaStore;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -36,9 +30,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imaginibus.Adapter.ImageViewAdapter;
+import com.example.imaginibus.Adapter.ZoomOutTransformation;
 import com.example.imaginibus.BuildConfig;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Utils.MyApplication;
@@ -63,6 +59,8 @@ public class ViewImage extends AppCompatActivity {
     ImageViewAdapter imageAdapter;
     int cur_img_position;
     ImageModel cur_img;
+    private TextView text_slider;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +79,8 @@ public class ViewImage extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        text_slider = findViewById(R.id.text_slide);
 
         viewPager = findViewById(R.id.view_pager);
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
@@ -150,6 +150,7 @@ public class ViewImage extends AppCompatActivity {
         viewPager.setAdapter(imageAdapter);
         viewPager.setCurrentItem(cur_img_position);
 
+        viewPager.setPageTransformer(true, new ZoomOutTransformation());
         // set viewpager change listener
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
@@ -201,7 +202,16 @@ public class ViewImage extends AppCompatActivity {
         btn_slideshow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                slideshowImage();
+                String text = text_slider.getText().toString();
+
+                if (text.equals("")) {
+                    text_slider.setText("SlideShow is on");
+                    slideshowImage();
+                }
+                else {
+                    text_slider.setText("");
+                    stopSlideshowImage();
+                }
             }
         });
 
@@ -428,8 +438,12 @@ public class ViewImage extends AppCompatActivity {
     }
 
     private void slideshowImage(){
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new MyTimerTask(), 2000, 4000);
+    }
+
+    private void stopSlideshowImage(){
+        timer.cancel();
     }
 
     public class MyTimerTask extends TimerTask {
@@ -438,11 +452,10 @@ public class ViewImage extends AppCompatActivity {
             ViewImage.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    if (cur_img_position == listImage.size()-1)
-                        cur_img_position = 0;
-
-                    viewPager.setCurrentItem(++cur_img_position);
+                   if (viewPager.getCurrentItem() < listImage.size() - 1)
+                       viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                   else
+                       viewPager.setCurrentItem(0);
                 }
             });
         }
