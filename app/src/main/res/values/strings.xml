@@ -23,7 +23,7 @@
     <string name="btn_layout">Change Layout</string>
     <string name="btn_detail">Detail</string>
     <string name="btn_tag">Tag</string>
-    <string name="btn_secure">Add/remove from Secure</string>
+    <string name="btn_secure">Add to Secure</string>
     <string name="btn_background">Set as Background</string>
     <string name="btn_face_detect">Show Face\'s album</string>
 

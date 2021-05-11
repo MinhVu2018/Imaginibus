@@ -152,7 +152,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         btn_secure = findViewById(R.id.btn_secure);
         btn_secure.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SecureRegisterActivity.class);
+                SharedPreferences shp = getSharedPreferences(
+                        "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
+                String secure_email = shp.getString("SECURE_EMAIL", null);
+
+                Intent intent;
+                if (secure_email == null)
+                    intent = new Intent(MainActivity.this, SecureRegisterActivity.class);
+                else
+                    intent = new Intent(MainActivity.this, EnterPassword.class);
                 startActivity(intent);
             }
         });
@@ -262,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
         String fav_list = shp.getString("FAVORITE_LIST", null);
+        String secure_list = shp.getString("SECURE_LIST", null);
         String face_list = shp.getString("FACE_LIST", null);
         int current_layout = shp.getInt("LAYOUT", 0);
 
@@ -271,6 +280,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             ((MyApplication) this.getApplication()).setListFavorite(gson.fromJson(fav_list, type));
         } else {
             ((MyApplication) this.getApplication()).setListFavorite(new ArrayList<>());
+        }
+
+        //load secure list
+        if (secure_list != null) {
+            Type type = new TypeToken<List<ImageModel>>(){}.getType();
+            ((MyApplication) this.getApplication()).setListSecure(gson.fromJson(secure_list, type));
+        } else {
+            ((MyApplication) this.getApplication()).setListSecure(new ArrayList<>());
         }
 
         //is face list exist
@@ -300,6 +317,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Locale.setDefault(locale);
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
 
         //load layout
         ((MyApplication) this.getApplication()).currentLayout = current_layout;
