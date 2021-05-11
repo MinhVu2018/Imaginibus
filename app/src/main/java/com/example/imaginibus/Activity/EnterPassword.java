@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imaginibus.R;
@@ -21,6 +22,7 @@ public class EnterPassword extends AppCompatActivity {
     Button btn_next;
     String email;
     EditText pass;
+    TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +33,15 @@ public class EnterPassword extends AppCompatActivity {
 
         //find view
         pass = findViewById(R.id.editPassword);
+        title = findViewById(R.id.textView);
 
-        //get intent
-        if (getIntent().getBooleanExtra("REGIS", false))
-            email = getIntent().getStringExtra("EMAIL");
-        else
-            email = null;
-
-
+        //set title
+        if (getIntent().getBooleanExtra("CHECK_PASS", false)) {
+            title.setText(getResources().getString(R.string.check_password));
+        }
+        if (getIntent().getBooleanExtra("REGIS", false)) {
+            title.setText(getResources().getString(R.string.new_password));
+        }
 
         SetUpButton();
     }
@@ -56,23 +59,47 @@ public class EnterPassword extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (email == null) {
-                    SharedPreferences shp = getSharedPreferences(
-                            "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
-                    String savedPass = shp.getString("PASS", null);
-                    String curPass = String.valueOf(pass.getText());
-
-                    if (!curPass.equals(savedPass)) {
+                if (!EnterPassword.this.getIntent().getBooleanExtra("CHECK_PASS", false)) {
+                    if (getIntent().getBooleanExtra("REGIS", false))
+                        signupSecure();
+                    else
+                        signinSecure();
+                } else {
+                    if (checkPassword()) {
+                        Intent intent = new Intent(EnterPassword.this, EnterPassword.class);
+                        intent.putExtra("REGIS", true);
+                        startActivity(intent);
+                        finish();
+                    } else
                         Toast.makeText(EnterPassword.this, "Your password is incorrect!", Toast.LENGTH_SHORT);
-                        return;
-                    } else startSecureAlbum();
-                } else if (email != null) {
-                    String curPass = String.valueOf(pass.getText());
-                    saveLocale(curPass, email);
-                    startSecureAlbum();
                 }
             }
         });
+    }
+
+    private boolean checkPassword() {
+        SharedPreferences shp = getSharedPreferences(
+                "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
+        String savedPass = shp.getString("PASS", null);
+        String curPass = String.valueOf(pass.getText());
+
+        if (!curPass.equals(savedPass))
+            return false;
+
+        return true;
+    }
+    private void signupSecure() {
+        email = getIntent().getStringExtra("EMAIL");
+        String curPass = String.valueOf(pass.getText());
+        saveLocale(curPass, email);
+        startSecureAlbum();
+    }
+
+    private void signinSecure() {
+        if (checkPassword())
+            startSecureAlbum();
+
+        Toast.makeText(EnterPassword.this, "Your password is incorrect!", Toast.LENGTH_SHORT);
     }
 
     private void startSecureAlbum() {
@@ -85,7 +112,10 @@ public class EnterPassword extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("PASS", password);
-        editor.putString("SECURE_EMAIL", email);
+
+        if (email!=null)
+            editor.putString("SECURE_EMAIL", email);
+
         editor.commit();
     }
 }

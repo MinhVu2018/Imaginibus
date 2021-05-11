@@ -63,6 +63,7 @@ public class ViewImage extends AppCompatActivity {
     ImageViewAdapter imageAdapter;
     int cur_img_position;
     ImageModel cur_img;
+    ImageButton fav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class ViewImage extends AppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
+        fav = findViewById(R.id.btn_like);
 
         //set registerForContextMenu
         registerForContextMenu(viewPager);
@@ -94,6 +96,13 @@ public class ViewImage extends AppCompatActivity {
                 break;
         }
         cur_img = listImage.get(cur_img_position);
+
+        //setup fav button
+        if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
+            fav.setBackgroundResource(R.drawable.icon_like_yellow);
+        } else {
+            fav.setBackgroundResource(R.drawable.icon_like_white);
+        }
         //setup image adapter
         setUp();
 
@@ -181,9 +190,11 @@ public class ViewImage extends AppCompatActivity {
                 }
 
                 if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
+                    fav.setBackgroundResource(R.drawable.icon_like_white);
                     ((MyApplication) ViewImage.this.getApplication()).removeImageFromFavorite(cur_img);
                     Toast.makeText(ViewImage.this, "Remove image from Favorite", Toast.LENGTH_SHORT).show();
                 } else {
+                    fav.setBackgroundResource(R.drawable.icon_like_yellow);
                     Toast.makeText(ViewImage.this, "Add image to favorite!", Toast.LENGTH_SHORT).show();
                     ((MyApplication) ViewImage.this.getApplication()).addImageToFavorite(cur_img);
                 }
@@ -248,12 +259,15 @@ public class ViewImage extends AppCompatActivity {
                 //delete in secure
                 if (((MyApplication) ViewImage.this.getApplication()).isImageInSecure(cur_img)) {
                     ((MyApplication) ViewImage.this.getApplication()).removeImageFromSecure(cur_img);
+                    //save to my application and sharedreferences
+                    saveListSecure(((MyApplication) ViewImage.this.getApplicationContext()).getListSecure());
                     return;
                 }
 
                 //delete in favorite
                 if (((MyApplication) ViewImage.this.getApplication()).isImageInFavorite(cur_img)) {
                     ((MyApplication) ViewImage.this.getApplication()).removeImageFromFavorite(cur_img);
+                    saveListFavorite(((MyApplication) ViewImage.this.getApplication()).getListImageFavorite());
                 }
 
                 //delete in external storage

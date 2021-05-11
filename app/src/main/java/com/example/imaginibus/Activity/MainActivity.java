@@ -214,6 +214,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
                 startActivityForResult(intent_camera, 1001);
                 break;
+            case R.id.btn_change_pass:
+                Intent intent_cp = new Intent(MainActivity.this, EnterPassword.class);
+                intent_cp.putExtra("CHECK_PASS", true);
+                startActivity(intent_cp);
+                break;
             default:
                 break;
         }

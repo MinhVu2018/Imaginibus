@@ -39,6 +39,8 @@
     <string name="btn_next">Next</string>
     <string name="enter_password">Enter Password</string>
     <string name="btn_submit">Submit</string>
+    <string name="check_password">Enter your current Password</string>
+    <string name="new_password">Enter new Password</string>
 
     <!--Text on view a picture-->
     <string name="btn_share">Share</string>
