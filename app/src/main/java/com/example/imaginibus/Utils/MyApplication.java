@@ -18,8 +18,6 @@ public class MyApplication extends Application {
     private List<ImageModel> listImageFavorite;
     private List<VideoModel> listVideoFavorite;
     private List<AlbumModel> listFace;
-    private List<ImageModel> listSecure;
-
     public int currentLayout;
 
     public boolean setListImage(List<ImageModel> listImagePath) {
@@ -52,10 +50,6 @@ public class MyApplication extends Application {
         return true;
     }
 
-    public boolean setListSecure(List<ImageModel> listSecure) {
-        this.listSecure = listSecure;
-        return true;
-    }
     public void addImageToFavorite(ImageModel item) {
         if (listImageFavorite == null) {
             listImageFavorite = new ArrayList<>();
@@ -71,29 +65,10 @@ public class MyApplication extends Application {
         listVideoFavorite.add(item);
     }
 
-    public void addImageToSecure(ImageModel item) {
-        if (listSecure == null) {
-            listSecure = new ArrayList<>();
-        }
-
-        listSecure.add(item);
-    }
-
     public boolean removeImageFromFavorite(ImageModel image) {
         for (ImageModel item : listImageFavorite) {
             if (item.getImageUrl().equals(image.getImageUrl())) {
                 listImageFavorite.remove(item);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean removeImageFromSecure(ImageModel image) {
-        for (ImageModel item : listSecure) {
-            if (item.getImageUrl().equals(image.getImageUrl())) {
-                listSecure.remove(item);
                 return true;
             }
         }
@@ -120,16 +95,6 @@ public class MyApplication extends Application {
         return false;
     }
 
-    public boolean isImageInSecure(ImageModel image) {
-        for (ImageModel item : listSecure) {
-            if (item.getImageUrl().equals(image.getImageUrl())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public boolean isVideoInFavorite(VideoModel video){
         for(VideoModel item : listVideoFavorite)
             if (item.getPath().equals(video.getPath()))
@@ -144,6 +109,5 @@ public class MyApplication extends Application {
     public List<VideoModel> getListVideo() { return listVideo; }
     public List<ImageModel> getListImageFavorite() { return listImageFavorite; }
     public List<VideoModel> getListVideoFavorite() { return listVideoFavorite; }
-    public List<ImageModel> getListSecure() { return listSecure; }
     public List<AlbumModel> getListFace() {return listFace; }
 }

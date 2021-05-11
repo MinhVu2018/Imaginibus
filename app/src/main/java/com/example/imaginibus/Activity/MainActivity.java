@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
         listAlbum.setLayoutManager(new LinearLayoutManager(this));
         listAlbum.setAdapter(listAlbumAdapter);
+
     }
 
     private void SetUpButton(){
@@ -151,15 +152,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         btn_secure = findViewById(R.id.btn_secure);
         btn_secure.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SharedPreferences shp = getSharedPreferences(
-                        "com.example.imaginibus.PREFERENCES", Context.MODE_PRIVATE);
-                String secure_email = shp.getString("SECURE_EMAIL", null);
-
-                Intent intent;
-                if (secure_email == null)
-                    intent = new Intent(MainActivity.this, SecureRegisterActivity.class);
-                else
-                    intent = new Intent(MainActivity.this, EnterPassword.class);
+                Intent intent = new Intent(MainActivity.this, SecureRegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -213,11 +206,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             case R.id.btn_camera:
                 Intent intent_camera = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
                 startActivityForResult(intent_camera, 1001);
-                break;
-            case R.id.btn_change_pass:
-                Intent intent_cp = new Intent(MainActivity.this, EnterPassword.class);
-                intent_cp.putExtra("CHECK_PASS", true);
-                startActivity(intent_cp);
                 break;
             default:
                 break;
@@ -274,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
         String fav_list = shp.getString("FAVORITE_LIST", null);
-        String secure_list = shp.getString("SECURE_LIST", null);
         String face_list = shp.getString("FACE_LIST", null);
         int current_layout = shp.getInt("LAYOUT", 0);
 
@@ -286,20 +273,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             ((MyApplication) this.getApplication()).setListImageFavorite(new ArrayList<>());
         }
 
-        //load secure list
-        if (secure_list != null) {
-            Type type = new TypeToken<List<ImageModel>>(){}.getType();
-            ((MyApplication) this.getApplication()).setListSecure(gson.fromJson(secure_list, type));
-        } else {
-            ((MyApplication) this.getApplication()).setListSecure(new ArrayList<>());
-        }
-
         //is face list exist
         if (face_list != null) {
             Type type = new TypeToken<List<AlbumModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
         } else {
-            if (!isMyServiceRunning(FaceDetection.class) && !isMyServiceRunning(FaceGrouping.class)) {
+            if (!isMyServiceRunning(FaceDetection.class) || !isMyServiceRunning(FaceGrouping.class)) {
                 Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
                 startService(faceService);
             }
@@ -321,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Locale.setDefault(locale);
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-
 
         //load layout
         ((MyApplication) this.getApplication()).currentLayout = current_layout;

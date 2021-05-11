@@ -1,9 +1,6 @@
 package com.example.imaginibus.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,18 +10,10 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
-import com.example.imaginibus.Adapter.ImageAdapter;
-import com.example.imaginibus.Adapter.ImageLinearAdapter;
-import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
-import com.example.imaginibus.Utils.MyApplication;
-
-import java.util.List;
 
 public class SecureAlbum extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ImageButton btn_back, btn_option;
-    RecyclerView recyclerView;
-    List<ImageModel> listImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +22,6 @@ public class SecureAlbum extends AppCompatActivity implements PopupMenu.OnMenuIt
         getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_secure_album);
 
-        //find view and setup adapter
-        recyclerView = findViewById(R.id.list_image);
-        listImage = ((MyApplication) this.getApplication()).getListSecure();
-
-        if (((MyApplication) this.getApplication()).currentLayout == 0) {
-            setupAdapterGridLayout();
-        } else {
-            setupAdapterLinearLayout();
-        }
         SetUpButton();
     }
 
@@ -75,16 +55,4 @@ public class SecureAlbum extends AppCompatActivity implements PopupMenu.OnMenuIt
         return false;
     }
 
-
-    private void setupAdapterGridLayout() {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
-        recyclerView.setAdapter(imageAdapter);
-    }
-
-    private void setupAdapterLinearLayout() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, R.id.list_image, listImage);
-        recyclerView.setAdapter(imageLinearAdapter);
-    }
 }

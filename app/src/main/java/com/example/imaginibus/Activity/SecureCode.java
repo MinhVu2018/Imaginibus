@@ -8,19 +8,20 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.imaginibus.R;
 
-public class EnterPassword extends AppCompatActivity {
+public class SecureCode extends AppCompatActivity {
     ImageButton btn_back;
-    Button btn_next;
-
+    Button btn_login;
+    TextView resend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         getSupportActionBar().hide(); //hide the title bar
-        setContentView(R.layout.activity_enter_password);
+        setContentView(R.layout.activity_secure_code);
 
         SetUpButton();
     }
@@ -29,16 +30,15 @@ public class EnterPassword extends AppCompatActivity {
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(EnterPassword.this, MainActivity.class);
+                Intent intent = new Intent(SecureCode.this, MainActivity.class);
                 startActivity(intent);
             }
         });
 
-        btn_next = (Button) findViewById(R.id.btn_next);
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
+        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(EnterPassword.this, SecureAlbum.class);
+                Intent intent = new Intent(SecureCode.this, EnterPassword.class);
                 startActivity(intent);
             }
         });

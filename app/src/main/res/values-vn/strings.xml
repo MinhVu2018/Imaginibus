@@ -38,8 +38,6 @@
     <string name="btn_next">Tiếp theo</string>
     <string name="enter_password">Nhập mật khẩu</string>
     <string name="btn_submit">Hoàn thành</string>
-    <string name="check_password">Nhập mật khẩu hiện tại</string>
-    <string name="new_password">Nhập mật khẩu mới</string>
 
     <!--Text on view a picture-->
     <string name="btn_share">Chia sẻ</string>

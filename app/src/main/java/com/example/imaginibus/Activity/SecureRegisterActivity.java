@@ -4,19 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.imaginibus.R;
 
 public class SecureRegisterActivity extends AppCompatActivity {
     Button btn_regis;
-    EditText emailView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,22 +20,11 @@ public class SecureRegisterActivity extends AppCompatActivity {
         getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_secure_register);
 
-        //get the view
-        emailView = findViewById(R.id.email);
-
         btn_regis = (Button) findViewById(R.id.btn_next);
         btn_regis.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String userEmail = String.valueOf(emailView.getText());
-
-                if (!userEmail.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    Intent intent = new Intent(SecureRegisterActivity.this, EnterPassword.class);
-                    intent.putExtra("REGIS", true);
-                    intent.putExtra("EMAIL", userEmail);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(SecureRegisterActivity.this, "Your email is not valid!", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(SecureRegisterActivity.this, SecureCode.class);
+                startActivity(intent);
             }
         });
     }
