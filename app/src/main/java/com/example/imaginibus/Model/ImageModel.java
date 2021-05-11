@@ -23,8 +23,7 @@ public class ImageModel implements Serializable {
 
     public ImageModel(String[] d){
         data = new String[d.length];
-        for (int i=0; i<d.length; i++)
-            data[i] = d[i];
+        System.arraycopy(d, 0, data, 0, d.length);
     }
 
     public void setImageLocation(Double latitude, Double longtitude) {

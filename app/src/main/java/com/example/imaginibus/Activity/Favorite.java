@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.imaginibus.Adapter.ImageAdapter;
 import com.example.imaginibus.Adapter.ImageLinearAdapter;
 import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 
@@ -30,6 +31,7 @@ public class Favorite extends AppCompatActivity implements PopupMenu.OnMenuItemC
     TextView title, num_img;
     RecyclerView listImageView;
     List<ImageModel> listImage;
+    List<VideoModel> listVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

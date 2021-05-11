@@ -160,6 +160,13 @@ public class ViewImage extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 cur_img_position = position;
+                cur_img = listImage.get(position);
+                ImageButton btn_favorite = findViewById(R.id.btn_like);
+                boolean liked = ((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img);
+                if (liked)
+                    btn_favorite.setImageResource(R.drawable.icon_liked_white);
+                else
+                    btn_favorite.setImageResource(R.drawable.icon_like_white);
             }
 
             @Override
@@ -170,15 +177,23 @@ public class ViewImage extends AppCompatActivity {
 
     public void setupButton() {
         ImageButton btn_favorite = findViewById(R.id.btn_like);
+
+        if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img))
+            btn_favorite.setImageResource(R.drawable.icon_liked_white);
+        else
+            btn_favorite.setImageResource(R.drawable.icon_like_white);
+
         btn_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cur_img = listImage.get(cur_img_position);
                 if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
                     Toast.makeText(ViewImage.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
+                    btn_favorite.setImageResource(R.drawable.icon_like_white);
                     ((MyApplication) ViewImage.this.getApplicationContext()).removeImageFromFavorite(cur_img);
                 } else {
                     Toast.makeText(ViewImage.this.getApplicationContext(), "Add image to favorite!", Toast.LENGTH_SHORT).show();
+                    btn_favorite.setImageResource(R.drawable.icon_liked_white);
                     ((MyApplication) ViewImage.this.getApplicationContext()).addImageToFavorite(cur_img);
                 }
 
@@ -264,10 +279,10 @@ public class ViewImage extends AppCompatActivity {
     
     private void saveListFavorite(List<ImageModel> items) {
         //SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(MyApplication.share_preference_path, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        editor.putString("FAVORITE_LIST", gson.toJson(items));
+        editor.putString(MyApplication.image_favorite_path, gson.toJson(items));
         editor.commit();
     }
 

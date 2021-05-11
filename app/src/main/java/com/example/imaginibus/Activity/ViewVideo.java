@@ -128,6 +128,14 @@ public class ViewVideo extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                cur_vid_position = position;
+                cur_vid = listVideo.get(position);
+                ImageButton btn_favorite = findViewById(R.id.btn_like);
+                boolean liked = ((MyApplication) ViewVideo.this.getApplicationContext()).isVideoInFavorite(cur_vid);
+                if (liked)
+                    btn_favorite.setImageResource(R.drawable.icon_liked_white);
+                else
+                    btn_favorite.setImageResource(R.drawable.icon_like_white);
             }
 
             @Override
@@ -137,21 +145,29 @@ public class ViewVideo extends AppCompatActivity {
     }
 
     private void SetUpButton(){
-        ImageButton btn_favourite = findViewById(R.id.btn_like);
-        btn_favourite.setOnClickListener(new View.OnClickListener() {
+        ImageButton btn_favorite = findViewById(R.id.btn_like);
+
+        if (((MyApplication) ViewVideo.this.getApplicationContext()).isVideoInFavorite(cur_vid))
+            btn_favorite.setImageResource(R.drawable.icon_liked_white);
+        else
+            btn_favorite.setImageResource(R.drawable.icon_like_white);
+
+        btn_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cur_vid = listVideo.get(cur_vid_position);
                 if (((MyApplication) ViewVideo.this.getApplicationContext()).isVideoInFavorite(cur_vid)) {
                     Toast.makeText(ViewVideo.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
-//                    ((MyApplication) ViewVideo.this.getApplicationContext()).removeVideoFromFavorite(cur_vid);
+                    btn_favorite.setImageResource(R.drawable.icon_like_white);
+                    ((MyApplication) ViewVideo.this.getApplicationContext()).removeVideoFromFavorite(cur_vid);
                 } else {
                     Toast.makeText(ViewVideo.this.getApplicationContext(), "Add image to favorite!", Toast.LENGTH_SHORT).show();
-//                    ((MyApplication) ViewVideo.this.getApplicationContext()).addVideoToFavorite(cur_vid);
+                    btn_favorite.setImageResource(R.drawable.icon_liked_white);
+                    ((MyApplication) ViewVideo.this.getApplicationContext()).addVideoToFavorite(cur_vid);
                 }
 
                 //save to my application and sharedreferences
-//                saveListFavorite(((MyApplication) ViewVideo.this.getApplicationContext()).getListVideoFavorite());
+                saveListFavorite(((MyApplication) ViewVideo.this.getApplicationContext()).getListVideoFavorite());
             }
         });
 
@@ -178,7 +194,7 @@ public class ViewVideo extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                deleteVideo(new File(cur_vid.getPath()));
+                deleteVideo(new File(cur_vid.getPath()));
                 Toast.makeText(ViewVideo.this, "Xóa mất tiu", Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -194,10 +210,10 @@ public class ViewVideo extends AppCompatActivity {
 
     private void saveListFavorite(List<VideoModel> items) {
         // SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(MyApplication.share_preference_path, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        editor.putString("FAVORITE_VIDEO_LIST", gson.toJson(items));
+        editor.putString(MyApplication.video_favorite_path, gson.toJson(items));
         editor.commit();
     }
 
@@ -270,31 +286,31 @@ public class ViewVideo extends AppCompatActivity {
 
     // exif wrong datetime
     private void showVideoDetail() {
-//        try{
-//            ExifInterface exif = new ExifInterface(cur_img.getImageUrl());
-//            String myAttribute="";
-//            myAttribute += "DateTime: " + cur_img.getImageDateTime() + "\n";
-//            myAttribute += "Size:" + cur_img.getSize() + " | ";
-//            myAttribute += "Resolution: " + cur_img.getWidth() + "x" + cur_img.getHeight() + "\n";
-//            myAttribute += "Path: " + cur_img.getImageUrl() + "\n";
-//            myAttribute += "Title: " + cur_img.getTitle() + "\n";
-//            myAttribute += getTagString(ExifInterface.TAG_FLASH, exif);
-//            myAttribute += getTagString(ExifInterface.TAG_MAKE, exif);
-//            myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
-//
-//            // create dialog to choose option
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            //Setting message manually and performing action on button click
-//            builder.setMessage(myAttribute);
-//            //Creating dialog box
-//            AlertDialog alert = builder.create();
-//            //Setting the title manually
-//            alert.setTitle("Image information");
-//            alert.show();
-//
-//        }catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try{
+            ExifInterface exif = new ExifInterface(cur_vid.getPath());
+            String myAttribute="";
+            myAttribute += "DateTime: " + cur_vid.getVideoDateTime() + "\n";
+            myAttribute += "Size:" + cur_vid.getSize() + " | ";
+            myAttribute += "Resolution: " + cur_vid.getWidth() + "x" + cur_vid.getHeight() + "\n";
+            myAttribute += "Path: " + cur_vid.getPath() + "\n";
+            myAttribute += "Title: " + cur_vid.getTitle() + "\n";
+            myAttribute += getTagString(ExifInterface.TAG_FLASH, exif);
+            myAttribute += getTagString(ExifInterface.TAG_MAKE, exif);
+            myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
+
+            // create dialog to choose option
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //Setting message manually and performing action on button click
+            builder.setMessage(myAttribute);
+            //Creating dialog box
+            AlertDialog alert = builder.create();
+            //Setting the title manually
+            alert.setTitle("Image information");
+            alert.show();
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
         Toast.makeText(this, "Ai cho xem", Toast.LENGTH_SHORT).show();
     }
 
@@ -304,20 +320,20 @@ public class ViewVideo extends AppCompatActivity {
 
     private void deleteVideo(File file) {
         // Set up the projection (we only need the ID)
-        String[] projection = {MediaStore.Images.Media._ID};
+        String[] projection = {MediaStore.Video.Media._ID};
 
         // Match on the file path
-        String selection = MediaStore.Images.Media.DATA + " = ?";
+        String selection = MediaStore.Video.Media.DATA + " = ?";
         String[] selectionArgs = new String[]{file.getAbsolutePath()};
 
         // Query for the ID of the media matching the file path
-        Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Uri queryUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = getContentResolver();
         Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
         if (c.moveToFirst()) {
             // We found the ID. Deleting the item via the content provider will also remove the file
-            long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-            Uri deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
+            Uri deleteUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
             contentResolver.delete(deleteUri, null, null);
         } else {
             // File not found in media store

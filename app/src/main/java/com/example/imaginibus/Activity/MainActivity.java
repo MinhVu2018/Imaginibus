@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.imaginibus.Adapter.ListAlbumAdapter;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
+import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
 import com.example.imaginibus.Service.FaceDetection;
@@ -261,17 +262,25 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         String language = shp.getString("USER_LANGUAGE","");
         Boolean theme = shp.getBoolean("NIGHT_MODE", false);
-        String fav_list = shp.getString("FAVORITE_LIST", null);
+        String fav_img_list = shp.getString(MyApplication.image_favorite_path, null);
+        String fav_vid_list = shp.getString(MyApplication.video_favorite_path, null);
         String face_list = shp.getString("FACE_LIST", null);
         int current_layout = shp.getInt("LAYOUT", 0);
 
-        //load favorite list
-        if (fav_list != null) {
+        //load favorite image list
+        if (fav_img_list != null) {
             Type type = new TypeToken<List<ImageModel>>(){}.getType();
-            ((MyApplication) this.getApplication()).setListImageFavorite(gson.fromJson(fav_list, type));
+            ((MyApplication) this.getApplication()).setListImageFavorite(gson.fromJson(fav_img_list, type));
         } else {
             ((MyApplication) this.getApplication()).setListImageFavorite(new ArrayList<>());
         }
+
+        // load favorite video list
+        if (fav_vid_list != null){
+            Type type = new TypeToken<List<VideoModel>>(){}.getType();
+            ((MyApplication) this.getApplication()).setListVideoFavorite(gson.fromJson(fav_vid_list, type));
+        } else
+            ((MyApplication) this.getApplication()).setListVideoFavorite(new ArrayList<>());
 
         //is face list exist
         if (face_list != null) {

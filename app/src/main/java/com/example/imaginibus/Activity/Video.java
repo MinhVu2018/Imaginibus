@@ -50,6 +50,25 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         SetUpButton();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //load video
+        externalReadVideo();
+
+        //load id
+        listVideoView = findViewById(R.id.list_video);
+        listVideoView.setLayoutManager(new GridLayoutManager(this, 3));
+        VideoAdapter videoAdapter = new VideoAdapter(this, ((MyApplication) this.getApplication()).getListVideo());
+        listVideoView.setAdapter(videoAdapter);
+        numVideo = findViewById(R.id.num_videos);
+        numVideo.setText(String.valueOf(((MyApplication) this.getApplication()).getListVideo().size()) + " ");
+
+        //setup button
+        SetUpButton();
+    }
+
     private void SetUpButton() {
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +102,14 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         //create list
         List<VideoModel> listVideo = new ArrayList<>();
 
-        final String[] columns = { MediaStore.Video.Media.DATA, MediaStore.Video.Media.DATE_ADDED };
+        final String[] columns = {MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DATE_ADDED,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.WIDTH,
+                MediaStore.Audio.Media.HEIGHT,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DISPLAY_NAME};
+
         final String orderBy = MediaStore.Video.Media.DATE_ADDED;
         //Stores all the images from the gallery in Cursor
         Cursor cursor = getContentResolver().query(
@@ -94,10 +120,13 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
 
         for (int i = 0; i < count; i++) {
             cursor.moveToPosition(i);
-            int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+            String[] data = new String[7];
+            for (int j=0; j<columns.length; j++)
+                data[j] = cursor.getString(j);
 
             //Store the path of the image
-            VideoModel videoModel = new VideoModel(cursor.getString(dataColumnIndex));
+            VideoModel videoModel = new VideoModel(data);
 
             //add that image to list image
             listVideo.add(0, videoModel);

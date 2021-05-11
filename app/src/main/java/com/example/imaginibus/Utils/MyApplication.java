@@ -1,14 +1,12 @@
 package com.example.imaginibus.Utils;
 
 import android.app.Application;
-import android.graphics.Rect;
 
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.Model.VideoModel;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class MyApplication extends Application {
@@ -20,6 +18,10 @@ public class MyApplication extends Application {
     private List<AlbumModel> listFace;
     public int currentLayout;
 
+    static public String share_preference_path = "com.example.imaginibus.PREFERENCES";
+    static public String image_favorite_path = "FAVORITE_IMAGE_LIST";
+    static public String video_favorite_path = "FAVORITE_VIDEO_LIST";
+
     public boolean setListImage(List<ImageModel> listImagePath) {
         this.listImage = listImagePath;
         return true;
@@ -30,9 +32,8 @@ public class MyApplication extends Application {
         return true;
     }
 
-    public boolean setListVideo(List<VideoModel> listVideo) {
+    public void setListVideo(List<VideoModel> listVideo) {
         this.listVideo = listVideo;
-        return true;
     }
 
     public boolean setListImageFavorite(List<ImageModel> listImageFavorite) {
@@ -103,7 +104,7 @@ public class MyApplication extends Application {
     }
 
     public int getListImageSize() { return listImage.size(); }
-
+    public int getListVideoSize() { return listVideo.size(); }
     public List<ImageModel> getListImage() { return listImage; }
     public List<AlbumModel> getListAlbum() { return listAlbum; }
     public List<VideoModel> getListVideo() { return listVideo; }
