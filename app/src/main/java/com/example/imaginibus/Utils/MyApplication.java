@@ -15,7 +15,8 @@ public class MyApplication extends Application {
     private List<ImageModel> listImage;
     private List<AlbumModel> listAlbum;
     private List<VideoModel> listVideo;
-    private List<ImageModel> listFavorite;
+    private List<ImageModel> listImageFavorite;
+    private List<VideoModel> listVideoFavorite;
     private List<AlbumModel> listFace;
     private List<ImageModel> listSecure;
 
@@ -36,8 +37,13 @@ public class MyApplication extends Application {
         return true;
     }
 
-    public boolean setListFavorite(List<ImageModel> listFavorite) {
-        this.listFavorite = listFavorite;
+    public boolean setListImageFavorite(List<ImageModel> listImageFavorite) {
+        this.listImageFavorite = listImageFavorite;
+        return true;
+    }
+
+    public boolean setListVideoFavorite(List<VideoModel> listVideoFavorite){
+        this.listVideoFavorite = listVideoFavorite;
         return true;
     }
 
@@ -51,11 +57,18 @@ public class MyApplication extends Application {
         return true;
     }
     public void addImageToFavorite(ImageModel item) {
-        if (listFavorite == null) {
-            listFavorite = new ArrayList<>();
+        if (listImageFavorite == null) {
+            listImageFavorite = new ArrayList<>();
         }
 
-        listFavorite.add(item);
+        listImageFavorite.add(item);
+    }
+
+    public void addVideoToFavorite(VideoModel item){
+        if (listVideoFavorite == null)
+            listVideoFavorite = new ArrayList<>();
+
+        listVideoFavorite.add(item);
     }
 
     public void addImageToSecure(ImageModel item) {
@@ -67,9 +80,9 @@ public class MyApplication extends Application {
     }
 
     public boolean removeImageFromFavorite(ImageModel image) {
-        for (ImageModel item : listFavorite) {
+        for (ImageModel item : listImageFavorite) {
             if (item.getImageUrl().equals(image.getImageUrl())) {
-                listFavorite.remove(item);
+                listImageFavorite.remove(item);
                 return true;
             }
         }
@@ -88,8 +101,17 @@ public class MyApplication extends Application {
         return false;
     }
 
+    public boolean removeVideoFromFavorite(VideoModel video){
+        for (VideoModel item : listVideoFavorite)
+            if (item.getPath().equals(video.getPath())){
+                listVideoFavorite.remove(item);
+                return true;
+            }
+        return false;
+    }
+
     public boolean isImageInFavorite(ImageModel image) {
-        for (ImageModel item : listFavorite) {
+        for (ImageModel item : listImageFavorite) {
             if (item.getImageUrl().equals(image.getImageUrl())) {
                 return true;
             }
@@ -108,13 +130,19 @@ public class MyApplication extends Application {
         return false;
     }
 
-    public int getListImageSize() { return listImage.size(); }
-    public List<ImageModel> getListImage() {
-        return listImage;
+    public boolean isVideoInFavorite(VideoModel video){
+        for(VideoModel item : listVideoFavorite)
+            if (item.getPath().equals(video.getPath()))
+                return true;
+        return false;
     }
+
+    public int getListImageSize() { return listImage.size(); }
+
+    public List<ImageModel> getListImage() { return listImage; }
     public List<AlbumModel> getListAlbum() { return listAlbum; }
     public List<VideoModel> getListVideo() { return listVideo; }
-    public List<ImageModel> getListFavorite() { return listFavorite; }
+    public List<ImageModel> getListImageFavorite() { return listImageFavorite; }
+    public List<VideoModel> getListVideoFavorite() { return listVideoFavorite; }
     public List<AlbumModel> getListFace() {return listFace; }
-    public List<ImageModel> getListSecure() { return listSecure; }
 }

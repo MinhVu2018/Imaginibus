@@ -1,10 +1,15 @@
 package com.example.imaginibus.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
@@ -22,6 +27,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -48,6 +54,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
@@ -181,7 +189,7 @@ public class ViewImage extends AppCompatActivity {
                 }
 
                 //save to my application and sharedreferences
-                saveListFavorite(((MyApplication) ViewImage.this.getApplicationContext()).getListFavorite());
+                saveListFavorite(((MyApplication) ViewImage.this.getApplicationContext()).getListImageFavorite());
             }
         });
 
@@ -193,6 +201,14 @@ public class ViewImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPopup(v);
+            }
+        });
+
+        ImageButton btn_slideshow = findViewById(R.id.btn_slideshow);
+        btn_slideshow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slideshowImage();
             }
         });
 
@@ -454,5 +470,26 @@ public class ViewImage extends AppCompatActivity {
         ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
         mClipboard.setPrimaryClip(clip);
         Toast.makeText(this,"Image copied to clipboard",Toast.LENGTH_SHORT).show();
+    }
+
+    private void slideshowImage(){
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new MyTimerTask(), 2000, 4000);
+    }
+
+    public class MyTimerTask extends TimerTask {
+        @Override
+        public void run(){
+            ViewImage.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (cur_img_position == listImage.size()-1)
+                        cur_img_position = 0;
+
+                    viewPager.setCurrentItem(++cur_img_position);
+                }
+            });
+        }
     }
 }

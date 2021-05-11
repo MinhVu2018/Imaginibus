@@ -8,11 +8,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/btn_tag"
-        android:title="@string/btn_tag"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/btn_secure"
         android:title="@string/btn_secure"
         app:showAsAction="ifRoom" />
