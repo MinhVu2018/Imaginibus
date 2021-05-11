@@ -175,8 +175,8 @@ public class ViewImage extends AppCompatActivity {
                 cur_img = listImage.get(cur_img_position);
 
                 //check if this image is in secure, stop the action
-                if (((MyApplication) ViewImage.this.getApplication()).isImageInFavorite(cur_img)) {
-                    Toast.makeText(ViewImage.this, "Can add secure image to Favorite", Toast.LENGTH_SHORT).show();
+                if (((MyApplication) ViewImage.this.getApplication()).isImageInSecure(cur_img)) {
+                    Toast.makeText(ViewImage.this, "Can not add secure image to Favorite", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -246,7 +246,7 @@ public class ViewImage extends AppCompatActivity {
                 cur_img = listImage.get(cur_img_position);
 
                 //delete in secure
-                if (((MyApplication) ViewImage.this.getApplication()).isImageInFavorite(cur_img)) {
+                if (((MyApplication) ViewImage.this.getApplication()).isImageInSecure(cur_img)) {
                     ((MyApplication) ViewImage.this.getApplication()).removeImageFromSecure(cur_img);
                     return;
                 }

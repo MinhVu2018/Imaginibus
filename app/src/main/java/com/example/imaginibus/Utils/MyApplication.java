@@ -144,5 +144,6 @@ public class MyApplication extends Application {
     public List<VideoModel> getListVideo() { return listVideo; }
     public List<ImageModel> getListImageFavorite() { return listImageFavorite; }
     public List<VideoModel> getListVideoFavorite() { return listVideoFavorite; }
+    public List<ImageModel> getListSecure() { return listSecure; }
     public List<AlbumModel> getListFace() {return listFace; }
 }

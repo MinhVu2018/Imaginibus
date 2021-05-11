@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
         listAlbum.setLayoutManager(new LinearLayoutManager(this));
         listAlbum.setAdapter(listAlbumAdapter);
-
     }
 
     private void SetUpButton(){
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             Type type = new TypeToken<List<AlbumModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
         } else {
-            if (!isMyServiceRunning(FaceDetection.class) || !isMyServiceRunning(FaceGrouping.class)) {
+            if (!isMyServiceRunning(FaceDetection.class) && !isMyServiceRunning(FaceGrouping.class)) {
                 Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
                 startService(faceService);
             }
