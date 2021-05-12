@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +62,7 @@ public class ViewImage extends AppCompatActivity {
     ImageModel cur_img;
     private TextView text_slider;
     private Timer timer;
-    ImageButton fav;
+    ImageButton btn_favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +83,9 @@ public class ViewImage extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         text_slider = findViewById(R.id.text_slide);
-
+        btn_favorite = findViewById(R.id.btn_like);
         viewPager = findViewById(R.id.view_pager);
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
-        fav = findViewById(R.id.btn_like);
 
         //set registerForContextMenu
         registerForContextMenu(viewPager);
@@ -97,12 +97,6 @@ public class ViewImage extends AppCompatActivity {
         }
         cur_img = listImage.get(cur_img_position);
 
-        //setup fav button
-        if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
-            fav.setBackgroundResource(R.drawable.icon_like_yellow);
-        } else {
-            fav.setBackgroundResource(R.drawable.icon_like_white);
-        }
         //setup image adapter
         setUp();
 
@@ -152,6 +146,14 @@ public class ViewImage extends AppCompatActivity {
     }
 
     public void setUp(){
+        //setup button like
+        //setup like button when page change
+        boolean liked = ((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img);
+        if (liked)
+            btn_favorite.setImageResource(R.drawable.icon_liked_white);
+        else
+            btn_favorite.setImageResource(R.drawable.icon_like_white);
+
         // setup adapter
         imageAdapter = new ImageViewAdapter(this, listImage);
 
@@ -169,8 +171,9 @@ public class ViewImage extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 cur_img_position = position;
-                cur_img = listImage.get(position);
-                ImageButton btn_favorite = findViewById(R.id.btn_like);
+                cur_img = listImage.get(cur_img_position);
+
+                //setup like button when page change
                 boolean liked = ((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img);
                 if (liked)
                     btn_favorite.setImageResource(R.drawable.icon_liked_white);
@@ -185,31 +188,22 @@ public class ViewImage extends AppCompatActivity {
     }
 
     public void setupButton() {
-        ImageButton btn_favorite = findViewById(R.id.btn_like);
-
-        if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img))
-            btn_favorite.setImageResource(R.drawable.icon_liked_white);
-        else
-            btn_favorite.setImageResource(R.drawable.icon_like_white);
-
         btn_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cur_img = listImage.get(cur_img_position);
-
                 //check if this image is in secure, stop the action
                 if (((MyApplication) ViewImage.this.getApplication()).isImageInSecure(cur_img)) {
-                    Toast.makeText(ViewImage.this, "Can not add secure image to Favorite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewImage.this, getResources().getText(R.string.fav_secure_conflict), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInFavorite(cur_img)) {
-                    fav.setBackgroundResource(R.drawable.icon_like_white);
+                    btn_favorite.setImageResource(R.drawable.icon_like_white);
                     ((MyApplication) ViewImage.this.getApplication()).removeImageFromFavorite(cur_img);
-                    Toast.makeText(ViewImage.this, "Remove image from Favorite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewImage.this, getResources().getText(R.string.remove_from_favorite), Toast.LENGTH_SHORT).show();
                 } else {
-                    fav.setBackgroundResource(R.drawable.icon_like_yellow);
-                    Toast.makeText(ViewImage.this, "Add image to favorite!", Toast.LENGTH_SHORT).show();
+                    btn_favorite.setImageResource(R.drawable.icon_liked_white);
+                    Toast.makeText(ViewImage.this, getResources().getText(R.string.add_to_favorite), Toast.LENGTH_SHORT).show();
                     ((MyApplication) ViewImage.this.getApplication()).addImageToFavorite(cur_img);
                 }
 
@@ -236,7 +230,7 @@ public class ViewImage extends AppCompatActivity {
                 String text = text_slider.getText().toString();
 
                 if (text.equals("")) {
-                    text_slider.setText("SlideShow is on");
+                    text_slider.setText(getResources().getText(R.string.slideshow_on));
                     slideshowImage();
                 }
                 else {
@@ -295,7 +289,7 @@ public class ViewImage extends AppCompatActivity {
 
                 //delete in external storage
                 deleteImage(new File(listImage.get(cur_img_position).getImageUrl()));
-                Toast.makeText(ViewImage.this, "Xóa gòi đó", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ViewImage.this, getResources().getText(R.string.delete), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -363,9 +357,9 @@ public class ViewImage extends AppCompatActivity {
     private void addImageToSecure() {
         cur_img = listImage.get(cur_img_position);
         if (((MyApplication) ViewImage.this.getApplicationContext()).isImageInSecure(cur_img)) {
-            Toast.makeText(ViewImage.this, "Image is already in Secure", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewImage.this, getResources().getText(R.string.image_is_in_secure), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(ViewImage.this.getApplicationContext(), "Add image to Secure!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewImage.this.getApplicationContext(), getResources().getText(R.string.add_image_to_secure) , Toast.LENGTH_SHORT).show();
             deleteImage(new File(cur_img.getImageUrl()));
             ((MyApplication) ViewImage.this.getApplicationContext()).addImageToSecure(cur_img);
         }
@@ -380,22 +374,22 @@ public class ViewImage extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         //Setting message manually and performing action on button click
-        builder.setMessage("Set wallpaper to ")
-                .setPositiveButton("Lock screen", new DialogInterface.OnClickListener() {
+        builder.setMessage(getResources().getText(R.string.set_wallpaper_to) + " ")
+                .setPositiveButton(getResources().getText(R.string.lock_screen), new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     public void onClick(DialogInterface dialog, int id) {
                         setWallpaper("Lock");
                         finish();
                     }
                 })
-                .setNegativeButton("Home screen", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getText(R.string.home_screen), new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     public void onClick(DialogInterface dialog, int id) {
                         setWallpaper("Home");
                         finish();
                     }
                 })
-                .setNeutralButton("Both", new DialogInterface.OnClickListener(){
+                .setNeutralButton(getResources().getText(R.string.both_screen), new DialogInterface.OnClickListener(){
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     public void onClick(DialogInterface dialog, int id){
                         setWallpaper("Both");
@@ -406,7 +400,7 @@ public class ViewImage extends AppCompatActivity {
         //Creating dialog box
         AlertDialog alert = builder.create();
         //Setting the title manually
-        alert.setTitle("Set Wallpaper");
+        alert.setTitle(getResources().getText(R.string.set_wallpaper));
         alert.show();
     }
 
@@ -431,7 +425,7 @@ public class ViewImage extends AppCompatActivity {
             //Creating dialog box
             AlertDialog alert = builder.create();
             //Setting the title manually
-            alert.setTitle("Image information");
+            alert.setTitle(getResources().getText(R.string.information));
             alert.show();
 
         }catch (IOException e) {
@@ -469,7 +463,7 @@ public class ViewImage extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setType("image/*");
 
-            startActivity(Intent.createChooser(intent, "Share image via"));
+            startActivity(Intent.createChooser(intent, getResources().getText(R.string.share_item)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -506,7 +500,7 @@ public class ViewImage extends AppCompatActivity {
         ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
         mClipboard.setPrimaryClip(clip);
-        Toast.makeText(this,"Image copied to clipboard",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,getResources().getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
     }
 
     private void slideshowImage(){

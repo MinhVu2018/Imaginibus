@@ -22,6 +22,6 @@ public class AlbumModel {
     public String getAlbumName() { return this.albumName; }
     public List<ImageModel> getListImage() { return this.listImage; }
     public void addImage(ImageModel item) {
-        this.listImage.add(item);
+        this.listImage.add(0, item);
     }
 }

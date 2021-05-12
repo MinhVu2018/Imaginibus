@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     private void SetUpButton(){
-        btn_search = (ImageButton) findViewById(R.id.btn_search);
-
         btn_option = (ImageButton) findViewById(R.id.btn_option);
         btn_option.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

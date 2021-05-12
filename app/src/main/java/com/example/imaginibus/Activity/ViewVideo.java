@@ -157,11 +157,11 @@ public class ViewVideo extends AppCompatActivity {
             public void onClick(View v) {
                 cur_vid = listVideo.get(cur_vid_position);
                 if (((MyApplication) ViewVideo.this.getApplicationContext()).isVideoInFavorite(cur_vid)) {
-                    Toast.makeText(ViewVideo.this, "Remove image from favorite!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewVideo.this, getResources().getText(R.string.remove_from_favorite), Toast.LENGTH_SHORT).show();
                     btn_favorite.setImageResource(R.drawable.icon_like_white);
                     ((MyApplication) ViewVideo.this.getApplicationContext()).removeVideoFromFavorite(cur_vid);
                 } else {
-                    Toast.makeText(ViewVideo.this.getApplicationContext(), "Add image to favorite!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewVideo.this.getApplicationContext(), getResources().getText(R.string.add_to_favorite), Toast.LENGTH_SHORT).show();
                     btn_favorite.setImageResource(R.drawable.icon_liked_white);
                     ((MyApplication) ViewVideo.this.getApplicationContext()).addVideoToFavorite(cur_vid);
                 }
@@ -195,7 +195,7 @@ public class ViewVideo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deleteVideo(new File(cur_vid.getPath()));
-                Toast.makeText(ViewVideo.this, "Xóa mất tiu", Toast.LENGTH_LONG).show();
+                Toast.makeText(ViewVideo.this, getResources().getText(R.string.delete), Toast.LENGTH_LONG).show();
                 finish();
             }
         });
@@ -226,62 +226,10 @@ public class ViewVideo extends AppCompatActivity {
                 showVideoDetail();
                 return true;
             case R.id.btn_background:
-                chooseScreen();
+                Toast.makeText(this, getResources().getText(R.string.wallpaper_restrict), Toast.LENGTH_SHORT);
                 return true;
         }
         return false;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setWallpaper(String option){
-        WallpaperManager myWallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-        try {
-            InputStream ins = new URL("file://" + cur_vid.getPath()).openStream();
-            if (option.equals("Home"))
-                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_SYSTEM);
-            else if (option.equals("Lock"))
-                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_LOCK);
-            else
-                myWallpaperManager.setStream(ins, null, false, WallpaperManager.FLAG_LOCK | WallpaperManager.FLAG_SYSTEM);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // choose home / lock / both
-    private void chooseScreen(){
-        // create dialog to choose option
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        //Setting message manually and performing action on button click
-        builder.setMessage("Set wallpaper to ")
-                .setPositiveButton("Lock screen", new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    public void onClick(DialogInterface dialog, int id) {
-                        setWallpaper("Lock");
-                        finish();
-                    }
-                })
-                .setNegativeButton("Home screen", new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    public void onClick(DialogInterface dialog, int id) {
-                        setWallpaper("Home");
-                        finish();
-                    }
-                })
-                .setNeutralButton("Both", new DialogInterface.OnClickListener(){
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    public void onClick(DialogInterface dialog, int id){
-                        setWallpaper("Both");
-                        finish();
-                    }
-                });
-
-        //Creating dialog box
-        AlertDialog alert = builder.create();
-        //Setting the title manually
-        alert.setTitle("Set Wallpaper");
-        alert.show();
     }
 
     // exif wrong datetime
@@ -305,13 +253,13 @@ public class ViewVideo extends AppCompatActivity {
             //Creating dialog box
             AlertDialog alert = builder.create();
             //Setting the title manually
-            alert.setTitle("Image information");
+            alert.setTitle(getResources().getText(R.string.information));
             alert.show();
 
         }catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(this, "Ai cho xem", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Ai cho xem", Toast.LENGTH_SHORT).show();
     }
 
     private String getTagString(String tag, ExifInterface exif) {
@@ -349,6 +297,6 @@ public class ViewVideo extends AppCompatActivity {
         ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
         mClipboard.setPrimaryClip(clip);
-        Toast.makeText(this,"Video copied to clipboard",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,getResources(). getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
     }
 }

@@ -46,4 +46,22 @@
     <string name="btn_edit">Chỉnh sửa</string>
     <string name="btn_delete">Xóa</string>
     <string name="btn_copy">Sao chép</string>
+
+    <!--Program text-->
+    <string name="slideshow_on">Slide Show đang bật</string>
+    <string name="delete">Đã xóa một mục</string>
+    <string name="add_to_favorite">Đã thêm một mục vào Yêu thích</string>
+    <string name="remove_from_favorite">Đã xóa một mục khỏi Yêu thích</string>
+    <string name="fav_secure_conflict">Không thể đưa mục thuộc Bảo mật vào Yêu thích</string>
+    <string name="image_is_in_secure">Mục này đã nằm trong Bảo mật</string>
+    <string name="add_image_to_secure">Đã thêm một mục vào Bảo mật</string>
+    <string name="share_item">Chia sẻ mục này với</string>
+    <string name="copy_image">Đã sao chép một mục</string>
+    <string name="information">Thông tin</string>
+    <string name="set_wallpaper">Đặt làm hình nền</string>
+    <string name="set_wallpaper_to">Đặt làm hình nền ở</string>
+    <string name="lock_screen">Màn hình khóa</string>
+    <string name="home_screen">Màn hình chính</string>
+    <string name="both_screen">Cả hai</string>
+    <string name="wallpaper_restrict">Không thể đặt video làm hình nền</string>
 </resources>

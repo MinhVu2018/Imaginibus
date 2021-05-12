@@ -109,7 +109,7 @@ public class FaceDetection extends Service {
     }
 
     private void faceTracking() {
-        for (int i=0; i<80; i++) {
+        for (int i=0; i<30; i++) {
             //get the image
             ImageModel imageModel = allImage.get(i);
 

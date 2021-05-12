@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.example.imaginibus.R;
 
 public class SecureRegisterActivity extends AppCompatActivity {
     Button btn_regis;
+    ImageButton btn_back;
     EditText emailView;
 
     @Override
@@ -27,6 +29,7 @@ public class SecureRegisterActivity extends AppCompatActivity {
 
         //get the view
         emailView = findViewById(R.id.email);
+        btn_back = findViewById(R.id.btn_back2);
 
         btn_regis = (Button) findViewById(R.id.btn_next);
         btn_regis.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +44,12 @@ public class SecureRegisterActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SecureRegisterActivity.this, "Your email is not valid!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
             }
         });
     }

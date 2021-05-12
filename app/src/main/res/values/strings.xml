@@ -47,4 +47,22 @@
     <string name="btn_edit">Edit</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_copy">Copy</string>
+
+    <!--Program text-->
+    <string name="slideshow_on">Slide Show is On</string>
+    <string name="delete">Item is Deleted</string>
+    <string name="add_to_favorite">Item added to Favorite</string>
+    <string name="remove_from_favorite">Item removed to Favorite</string>
+    <string name="fav_secure_conflict">Can not add Secure item to Favorite</string>
+    <string name="image_is_in_secure">Item is already in Secure</string>
+    <string name="add_image_to_secure">Item added to Secure</string>
+    <string name="share_item">Share item via</string>
+    <string name="copy_image">Item copied to clipboard</string>
+    <string name="information">Item Information</string>
+    <string name="set_wallpaper">Set Wallpaper</string>
+    <string name="set_wallpaper_to">Set Wallpaper to</string>
+    <string name="lock_screen">Lock Screen</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="both_screen">Both</string>
+    <string name="wallpaper_restrict">Can not set video as Wallpaper</string>
 </resources>
