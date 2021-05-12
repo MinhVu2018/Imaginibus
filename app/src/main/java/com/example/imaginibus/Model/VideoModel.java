@@ -32,4 +32,5 @@ public class VideoModel implements Serializable {
     public String getHeight() { return data[4]; }
     public String getTitle() { return data[5]; }
     public String getName() { return data[6]; }
+    public String getAlbum() { return data[7]; }
 }

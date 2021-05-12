@@ -3,6 +3,6 @@
 
     <item
         android:id="@+id/copy_image"
-        android:title="Copy Image" />
+        android:title="@string/btn_language" />
 
 </menu>
