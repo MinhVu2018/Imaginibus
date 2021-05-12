@@ -31,7 +31,6 @@
         <activity android:name=".Activity.EditImage" />
         <activity android:name=".Activity.ViewVideo" />
         <activity android:name=".Activity.ViewImage" />
-        <activity android:name=".Activity.SecureCode" />
         <activity android:name=".Activity.EnterPassword" />
         <activity android:name=".Activity.SecureAlbum" />
         <activity android:name=".Activity.SecureRegisterActivity" />
