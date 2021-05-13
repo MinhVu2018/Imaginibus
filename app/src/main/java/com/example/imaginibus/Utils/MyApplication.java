@@ -1,6 +1,9 @@
 package com.example.imaginibus.Utils;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Build;
+import android.view.View;
 
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
@@ -23,6 +26,18 @@ public class MyApplication extends Application {
     static public String share_preference_path = "com.example.imaginibus.PREFERENCES";
     static public String image_favorite_path = "FAVORITE_IMAGE_LIST";
     static public String video_favorite_path = "FAVORITE_VIDEO_LIST";
+
+    public static void FullScreenCall(Activity activity) {
+        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = activity.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if(Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = activity.getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
 
     public boolean setListImage(List<ImageModel> listImagePath) {
         this.listImage = listImagePath;
@@ -79,6 +94,7 @@ public class MyApplication extends Application {
         }
         return true;
     }
+
     public boolean setListAlbum(List<AlbumModel> listAlbum) {
         this.listAlbum = listAlbum;
         return true;

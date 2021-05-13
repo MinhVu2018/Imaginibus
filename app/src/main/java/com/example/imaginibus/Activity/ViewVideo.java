@@ -1,19 +1,12 @@
 package com.example.imaginibus.Activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
-import android.app.WallpaperManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -32,7 +25,6 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.imaginibus.Adapter.VideoViewAdapter;
-import com.example.imaginibus.BuildConfig;
 import com.example.imaginibus.Model.VideoModel;
 import com.example.imaginibus.R;
 import com.example.imaginibus.Utils.MyApplication;
@@ -44,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,17 +67,18 @@ public class ViewVideo extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         viewPager = findViewById(R.id.view_pager);
-        listVideo = (ArrayList<VideoModel>) getIntent().getSerializableExtra("list_vid");
 
-        String video_path = getIntent().getStringExtra("video_path");
+        if (!handleIntentFilter()) {
+            listVideo = (ArrayList<VideoModel>) getIntent().getSerializableExtra("list_vid");
+            String video_path = getIntent().getStringExtra("video_path");
+            // set up list Video
+            for (cur_vid_position = 0; cur_vid_position < listVideo.size(); cur_vid_position++) {
+                if ((listVideo.get(cur_vid_position).getPath()).equals(video_path))
+                    break;
+            }
 
-        // set up list Video
-        for (cur_vid_position = 0; cur_vid_position<listVideo.size(); cur_vid_position++){
-            if ((listVideo.get(cur_vid_position).getPath()).equals(video_path))
-                break;
+            cur_vid = listVideo.get(cur_vid_position);
         }
-
-        cur_vid = listVideo.get(cur_vid_position);
         // setup video adapter
         setUp();
 
@@ -94,28 +86,51 @@ public class ViewVideo extends AppCompatActivity {
         SetUpButton();
     }
 
+    private boolean handleIntentFilter(){
+        Intent intent = getIntent();
+        Uri uri = intent.getData();
+        if (uri != null && intent.getType().indexOf("video/") != -1) {
+            cur_vid = createVideoModel(uri);
+            listVideo = new ArrayList<>();
+            listVideo.add(cur_vid);
+            return true;
+        }
+
+        return false;
+    }
+
+    public VideoModel createVideoModel(Uri contentUri) {
+        final String[] columns = {MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media.DATE_ADDED,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.WIDTH,
+                MediaStore.Video.Media.HEIGHT,
+                MediaStore.Video.Media.TITLE,
+                MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Video.Media.DISPLAY_NAME};
+
+        //Stores all the images from the gallery in Cursor
+        Cursor cursor = getContentResolver().query(contentUri, columns, null, null, null);
+
+        String[] data = new String[11];
+        cursor.moveToFirst();
+
+        for (int j=0; j<columns.length; j++)
+            data[j] = cursor.getString(j);
+
+        return new VideoModel(data);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        FullScreencall();
+        MyApplication.FullScreenCall(this);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        FullScreencall();
-    }
-
-    public void FullScreencall() {
-        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if(Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
+        MyApplication.FullScreenCall(this);
     }
 
     private void setUp(){

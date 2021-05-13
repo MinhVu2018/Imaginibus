@@ -57,6 +57,17 @@ public class AlbumImage extends AppCompatActivity implements PopupMenu.OnMenuIte
         //set up the buttons
         SetUpButton();
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
+    }
 
     private void setupAdapterGridLayout() {
         listImageView.setLayoutManager(new GridLayoutManager(this, 3));

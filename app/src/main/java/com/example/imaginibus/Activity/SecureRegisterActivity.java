@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imaginibus.R;
+import com.example.imaginibus.Utils.MyApplication;
 
 public class SecureRegisterActivity extends AppCompatActivity {
     Button btn_regis;
@@ -52,5 +53,17 @@ public class SecureRegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
     }
 }

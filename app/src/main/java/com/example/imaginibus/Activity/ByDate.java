@@ -38,6 +38,17 @@ public class ByDate extends AppCompatActivity {
         num_image.setText(String.valueOf(((MyApplication) this.getApplication()).getListImageSize()) + " ");
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
+    }
 //    private void internalReadImage() {
 //        final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED };
 //        final String orderBy = MediaStore.Images.Media.DATE_ADDED;

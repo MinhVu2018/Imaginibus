@@ -58,6 +58,18 @@ public class Favorite extends AppCompatActivity {
         showVideoToView();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
+    }
+
     private void setupButton() {
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

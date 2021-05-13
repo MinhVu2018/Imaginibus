@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         externalReadImage();
         externalReadVideo();
 
-
         //set list album
         listAlbum = (RecyclerView) findViewById(R.id.list_album);
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
@@ -113,11 +112,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
         listAlbum.setLayoutManager(new LinearLayoutManager(this));
         listAlbum.setAdapter(listAlbumAdapter);
+        MyApplication.FullScreenCall(this);
     }
 
     private void SetUpButton(){

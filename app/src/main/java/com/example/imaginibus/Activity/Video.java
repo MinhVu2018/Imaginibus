@@ -63,6 +63,18 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         SetUpButton();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
+    }
+
     private void separateVideoToAlbum() {
         for (VideoModel videoModel : listVideo) {
             boolean added = false;
@@ -83,7 +95,6 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
             videoAlbumList.add(0, albumVideoModel);
         }
     }
-
 
     private void SetUpButton() {
         btn_back = findViewById(R.id.btn_back);

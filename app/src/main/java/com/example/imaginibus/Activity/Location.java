@@ -47,6 +47,18 @@ public class Location extends AppCompatActivity {
         recyclerView.setAdapter(listAlbumAdapter);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
+    }
+
     private void SetUpButton() {
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {

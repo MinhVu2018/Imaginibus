@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imaginibus.R;
+import com.example.imaginibus.Utils.MyApplication;
 
 public class EnterPassword extends AppCompatActivity {
     ImageButton btn_back;
@@ -44,6 +45,18 @@ public class EnterPassword extends AppCompatActivity {
         }
 
         SetUpButton();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyApplication.FullScreenCall(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        MyApplication.FullScreenCall(this);
     }
 
     private void SetUpButton() {
@@ -88,6 +101,7 @@ public class EnterPassword extends AppCompatActivity {
 
         return true;
     }
+
     private void signupSecure() {
         email = getIntent().getStringExtra("EMAIL");
         String curPass = String.valueOf(pass.getText());
