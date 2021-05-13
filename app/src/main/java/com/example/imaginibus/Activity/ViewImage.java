@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -43,9 +44,12 @@ import com.example.imaginibus.R;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,6 +57,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import su.rbv.folderpicker.FolderPicker;
 
 public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
@@ -63,6 +69,7 @@ public class ViewImage extends AppCompatActivity {
     private TextView text_slider;
     private Timer timer;
     ImageButton btn_favorite;
+    private static final int PICKFILE_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +93,6 @@ public class ViewImage extends AppCompatActivity {
         btn_favorite = findViewById(R.id.btn_like);
         viewPager = findViewById(R.id.view_pager);
         listImage = (ArrayList<ImageModel>) getIntent().getSerializableExtra("list_img");
-
-        //set registerForContextMenu
-        registerForContextMenu(viewPager);
 
         String img_path = getIntent().getStringExtra("img_path");
         for (cur_img_position = 0; cur_img_position<listImage.size(); cur_img_position++) {
@@ -114,23 +118,6 @@ public class ViewImage extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         FullScreencall();
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.image_option_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.copy_image:
-                copyImage();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 
     public void FullScreencall() {
@@ -252,7 +239,14 @@ public class ViewImage extends AppCompatActivity {
         btn_copy.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                copyImage();
+                Intent intent = new Intent(ViewImage.this, FolderPicker.class);
+                intent.putExtra("title", "Choose folder");
+                intent.putExtra("pickFiles", false);
+                intent.putExtra("showFiles", false);
+                intent.putExtra("pictureFilesShowPreview", true);
+                intent.putExtra("location", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
+                intent.putExtra("theme", R.style.SampleFolderPickerTheme);
+                startActivityForResult(intent, 7777);
             }
         });
 
@@ -492,15 +486,57 @@ public class ViewImage extends AppCompatActivity {
         c.close();
     }
 
-    private void copyImage(){
-        Uri uri = FileProvider.getUriForFile(
-                this,
-                BuildConfig.APPLICATION_ID + ".provider",
-                new File(cur_img.getImageUrl()));
-        ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
-        mClipboard.setPrimaryClip(clip);
+    private void copyImage(String folderDes) throws IOException {
+//        Uri uri = FileProvider.getUriForFile(
+//                this,
+//                BuildConfig.APPLICATION_ID + ".provider",
+//                new File(cur_img.getImageUrl()));
+//        ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//        ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
+//        mClipboard.setPrimaryClip(clip);
+//        Toast.makeText(this,getResources().getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
+
+        String outputName = folderDes + "/" + "copy_of_"+ cur_img.getName();
+
+        File sourceLocation= new File (cur_img.getImageUrl());
+        File targetLocation= new File (outputName);
+
+        InputStream in = new FileInputStream(sourceLocation);
+        OutputStream out = new FileOutputStream(targetLocation);
+
+        // Copy the bits from instream to outstream
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            final Uri contentUri = Uri.fromFile(targetLocation);
+            scanIntent.setData(contentUri);
+            sendBroadcast(scanIntent);
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory()));
+            sendBroadcast(intent);
+        }
+
         Toast.makeText(this,getResources().getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 7777 && resultCode == RESULT_OK && data != null) {
+            String folderName = data.getStringExtra("data");
+            try {
+                copyImage(folderName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void slideshowImage(){

@@ -9,4 +9,24 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="SampleFolderPickerTheme" parent="FolderPickerTheme">
+        <item name="android:navigationBarColor">@color/colorNavigationBar</item>
+        <item name="android:windowBackground">@drawable/fp_main_gradient</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textColor">#D0D0D0</item>
+        <item name="android:textColorPrimary">#009090</item>
+        <item name="fp_buttons_background">@drawable/fp_button</item>
+        <item name="fp_title_color">@color/colorTitle</item>
+        <item name="fp_location_color">@color/colorLocation</item>
+        <item name="fp_drawable_file">@drawable/fp_file</item>
+        <item name="fp_drawable_folder">@drawable/fp_folder</item>
+        <item name="fp_drawable_ic_action_add">@drawable/fp_ic_action_add</item>
+        <item name="fp_drawable_ic_action_back">@drawable/fp_ic_action_back</item>
+        <item name="fp_drawable_ic_action_cancel">@drawable/fp_ic_action_cancel</item>
+        <item name="fp_drawable_ic_action_up">@drawable/fp_ic_action_up</item>
+    </style>
+
 </resources>

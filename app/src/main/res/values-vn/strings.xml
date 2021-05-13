@@ -56,7 +56,7 @@
     <string name="image_is_in_secure">Mục này đã nằm trong Bảo mật</string>
     <string name="add_image_to_secure">Đã thêm một mục vào Bảo mật</string>
     <string name="share_item">Chia sẻ mục này với</string>
-    <string name="copy_image">Đã sao chép một mục</string>
+    <string name="copy_image">Đã sao chép file ảnh</string>
     <string name="information">Thông tin</string>
     <string name="set_wallpaper">Đặt làm hình nền</string>
     <string name="set_wallpaper_to">Đặt làm hình nền ở</string>

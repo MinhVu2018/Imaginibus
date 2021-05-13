@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaScannerConnection;
 import android.media.effect.EffectFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -133,9 +134,9 @@ public class EditImage extends AppCompatActivity
         btn_crop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CropImage.activity()
-//                        .setGuidelines(CropImageView.Guidelines.ON)
-//                        .start(EditImage.this);
+                Uri uri = Uri.fromFile(new File(cur_img.getImageUrl()));
+                CropImage.activity(uri)
+                        .start(EditImage.this);
                 cur_editor.setText("Crop");
             }
         });
@@ -295,7 +296,8 @@ public class EditImage extends AppCompatActivity
                 String currentDateTime = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                 String fileName = currentDateTime + ".png";
 
-                photoEditor.saveAsFile(filePath + "/" + fileName, new PhotoEditor.OnSaveListener() {
+                String imagePath = filePath + "/" + fileName;
+                photoEditor.saveAsFile(imagePath, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
                         Toast.makeText(EditImage.this, "Image Saved Successfully", Toast.LENGTH_SHORT).show();
@@ -307,6 +309,15 @@ public class EditImage extends AppCompatActivity
                     }
                 });
                 finish();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    final Uri contentUri = Uri.fromFile(new File(imagePath));
+                    scanIntent.setData(contentUri);
+                    sendBroadcast(scanIntent);
+                } else {
+                    final Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory()));
+                    sendBroadcast(intent);
+                }
                 FullScreencall();
             }
         });
@@ -324,7 +335,6 @@ public class EditImage extends AppCompatActivity
         }
     }
 
-    // crop image
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -332,7 +342,7 @@ public class EditImage extends AppCompatActivity
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                photoEditorView.getSource().setImageURI(Uri.parse(cur_img.getImageUrl()));
+                photoEditorView.getSource().setImageURI(resultUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

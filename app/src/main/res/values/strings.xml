@@ -57,7 +57,7 @@
     <string name="image_is_in_secure">Item is already in Secure</string>
     <string name="add_image_to_secure">Item added to Secure</string>
     <string name="share_item">Share item via</string>
-    <string name="copy_image">Item copied to clipboard</string>
+    <string name="copy_image">Item copied</string>
     <string name="information">Item Information</string>
     <string name="set_wallpaper">Set Wallpaper</string>
     <string name="set_wallpaper_to">Set Wallpaper to</string>

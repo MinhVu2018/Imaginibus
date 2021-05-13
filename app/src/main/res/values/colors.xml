@@ -14,4 +14,5 @@
     <color name="pink">#FFC0CB</color>
     <color name="transparent_black">#66000000</color>
     <color name="transparent_white">#00FFFFFF</color>
+    <color name="colorNavigationBar">#202020</color>
 </resources>

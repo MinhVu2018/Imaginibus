@@ -14,12 +14,14 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,11 +39,16 @@ import com.example.imaginibus.Utils.MyApplication;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import su.rbv.folderpicker.FolderPicker;
 
 public class ViewVideo extends AppCompatActivity {
     private ViewPager viewPager;
@@ -186,7 +193,14 @@ public class ViewVideo extends AppCompatActivity {
         btn_copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                copyVideo();
+                Intent intent = new Intent(ViewVideo.this, FolderPicker.class);
+                intent.putExtra("title", "Choose folder");
+                intent.putExtra("pickFiles", false);
+                intent.putExtra("showFiles", false);
+                intent.putExtra("pictureFilesShowPreview", true);
+                intent.putExtra("location", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
+                intent.putExtra("theme", R.style.SampleFolderPickerTheme);
+                startActivityForResult(intent, 7777);
             }
         });
 
@@ -289,14 +303,48 @@ public class ViewVideo extends AppCompatActivity {
         c.close();
     }
 
-    private void copyVideo(){
-        Uri uri = FileProvider.getUriForFile(
-                this,
-                BuildConfig.APPLICATION_ID + ".provider",
-                new File(cur_vid.getPath()));
-        ClipboardManager mClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newUri(getApplicationContext().getContentResolver(), "a Photo", uri);
-        mClipboard.setPrimaryClip(clip);
-        Toast.makeText(this,getResources(). getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
+    private void copyVideo(String folderDes) throws IOException {
+        String outputName = folderDes + "/" + "copy_of_"+ cur_vid.getName();
+
+        File sourceLocation= new File (cur_vid.getPath());
+        File targetLocation= new File (outputName);
+
+        InputStream in = new FileInputStream(sourceLocation);
+        OutputStream out = new FileOutputStream(targetLocation);
+
+        // Copy the bits from instream to outstream
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            final Uri contentUri = Uri.fromFile(targetLocation);
+            scanIntent.setData(contentUri);
+            sendBroadcast(scanIntent);
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory()));
+            sendBroadcast(intent);
+        }
+
+        Toast.makeText(this,getResources().getText(R.string.copy_image),Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 7777 && resultCode == RESULT_OK && data != null) {
+            String folderName = data.getStringExtra("data");
+            try {
+                copyVideo(folderName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
