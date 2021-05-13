@@ -31,10 +31,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    ImageButton btn_back, btn_option;
+    ImageButton btn_back;
     RecyclerView listVideoView;
     TextView numVideo;
     List<AlbumVideoModel> videoAlbumList;
+    List<VideoModel> listVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,7 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
 
         //allocate memory
         videoAlbumList = new ArrayList<>();
-
-        //load video
-        externalReadVideo();
+        listVideo = (List<VideoModel>) getIntent().getSerializableExtra("LIST_VIDEO");
 
         //separate video to album
         separateVideoToAlbum();
@@ -65,9 +64,7 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
     }
 
     private void separateVideoToAlbum() {
-        List<VideoModel> allVideo = ((MyApplication) this.getApplication()).getListVideo();
-
-        for (VideoModel videoModel : allVideo) {
+        for (VideoModel videoModel : listVideo) {
             boolean added = false;
             for (AlbumVideoModel albumVideoModel : videoAlbumList) {
                 if (albumVideoModel.getAlbumName().equals(videoModel.getAlbum())) {
@@ -92,17 +89,10 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Video.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
-        btn_option = findViewById(R.id.btn_option);
-        btn_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showPopup(v);
-            }
-        });
     }
 
     public void showPopup(View v) {
@@ -115,47 +105,5 @@ public class Video extends AppCompatActivity implements PopupMenu.OnMenuItemClic
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         return false;
-    }
-
-    private void externalReadVideo() {
-        //create list
-        List<VideoModel> listVideo = new ArrayList<>();
-
-        final String[] columns = {MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DATE_ADDED,
-                MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.WIDTH,
-                MediaStore.Audio.Media.HEIGHT,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.BUCKET_DISPLAY_NAME };
-
-        final String orderBy = MediaStore.Video.Media.DATE_ADDED;
-        //Stores all the images from the gallery in Cursor
-        Cursor cursor = getContentResolver().query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null,
-                null, orderBy);
-        //Total number of images
-        int count = cursor.getCount();
-
-        for (int i = 0; i < count; i++) {
-            cursor.moveToPosition(i);
-
-            String[] data = new String[8];
-            for (int j=0; j<columns.length; j++)
-                data[j] = cursor.getString(j);
-
-            //Store the path of the image
-            VideoModel videoModel = new VideoModel(data);
-
-            //add that image to list image
-            listVideo.add(0, videoModel);
-        }
-
-        // The cursor should be freed up after use with close()
-        cursor.close();
-
-        //set to application variable
-        ((MyApplication) this.getApplication()).setListVideo(listVideo);
     }
 }

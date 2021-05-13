@@ -13,13 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.imaginibus.Activity.Favorite;
+import com.example.imaginibus.Activity.AlbumImage;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Model.ImageModel;
 import com.example.imaginibus.R;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 public class ListAlbumAdapter extends RecyclerView.Adapter {
@@ -51,7 +50,7 @@ public class ListAlbumAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context, Favorite.class);
+            Intent intent = new Intent(context, AlbumImage.class);
 
             for (int i=0; i<items.size(); i++) {
                 if (items.get(i).getAlbumName().equals(albumName.getText().toString())) {

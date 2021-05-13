@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //get all image and set to global variable
         externalReadImage();
+        externalReadVideo();
+
 
         //set list album
         listAlbum = (RecyclerView) findViewById(R.id.list_album);
@@ -127,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         btn_video.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Video.class);
+                intent.putExtra("LIST_VIDEO", (Serializable) ((MyApplication) MainActivity.this.getApplication()).getListVideo());
                 startActivity(intent);
             }
         });
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         btn_location.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Location.class);
+                intent.putExtra("LIST_VIDEO", (Serializable) ((MyApplication) MainActivity.this.getApplication()).getListVideo());
                 startActivity(intent);
             }
         });
@@ -162,15 +167,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 startActivity(intent);
             }
         });
-
-//        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
-//        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                refresh(); // your code
-//                pullToRefresh.setRefreshing(false);
-//            }
-//        });
     }
 
     public void showPopup(View v) {
@@ -452,5 +448,47 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }
         return false;
+    }
+
+    private void externalReadVideo() {
+        //create list
+        List<VideoModel> listVideo = new ArrayList<>();
+
+        final String[] columns = {MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DATE_ADDED,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.WIDTH,
+                MediaStore.Audio.Media.HEIGHT,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.BUCKET_DISPLAY_NAME };
+
+        final String orderBy = MediaStore.Video.Media.DATE_ADDED;
+        //Stores all the images from the gallery in Cursor
+        Cursor cursor = getContentResolver().query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null,
+                null, orderBy);
+        //Total number of images
+        int count = cursor.getCount();
+
+        for (int i = 0; i < count; i++) {
+            cursor.moveToPosition(i);
+
+            String[] data = new String[8];
+            for (int j=0; j<columns.length; j++)
+                data[j] = cursor.getString(j);
+
+            //Store the path of the image
+            VideoModel videoModel = new VideoModel(data);
+
+            //add that image to list image
+            listVideo.add(0, videoModel);
+        }
+
+        // The cursor should be freed up after use with close()
+        cursor.close();
+
+        //set to application variable
+        ((MyApplication) this.getApplication()).setListVideo(listVideo);
     }
 }
