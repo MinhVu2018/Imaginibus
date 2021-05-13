@@ -69,16 +69,20 @@ public class Location extends AppCompatActivity {
         List<ImageModel> allImage = ((MyApplication) this.getApplication()).getListImage();
 
         for (ImageModel item : allImage) {
-            //find the city of this item
-            if (item.getLat() != 0 || item.getLong() != 0) {
-                try {
-                    address = geocoder.getFromLocation(item.getLat(), item.getLong(), 1);
-                    city = address.get(0).getCountryName();
-                    if (city == null) {
-                        city = "Location not found";
+            if (item.getTag() != null) {
+                city = item.getTag();
+            } else {
+                //find the city of this item
+                if (item.getLat() != 0 || item.getLong() != 0) {
+                    try {
+                        address = geocoder.getFromLocation(item.getLat(), item.getLong(), 1);
+                        city = address.get(0).getCountryName();
+                        if (city == null) {
+                            city = "Location not found";
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
 

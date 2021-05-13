@@ -46,6 +46,7 @@
     <string name="btn_edit">Chỉnh sửa</string>
     <string name="btn_delete">Xóa</string>
     <string name="btn_copy">Sao chép</string>
+    <string name="btn_save">Lưu</string>
 
     <!--Program text-->
     <string name="slideshow_on">Slide Show đang bật</string>
@@ -64,4 +65,5 @@
     <string name="home_screen">Màn hình chính</string>
     <string name="both_screen">Cả hai</string>
     <string name="wallpaper_restrict">Không thể đặt video làm hình nền</string>
+    <string name="tag_added">Thẻ vị trí đã thay đổi</string>
 </resources>

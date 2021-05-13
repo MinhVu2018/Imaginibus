@@ -18,12 +18,17 @@ public class ImageModel implements Serializable {
 
     // URL, DATE_ADDED, SIZE, WIDTH, HEIGHT, TITLE, BUCKET_DISPLAY_NAME, DISPLAY_NAME;
     private double latitude, longitude;
+    private String tag;
 
     public ImageModel(){ }
 
     public ImageModel(String[] d){
         data = new String[d.length];
         System.arraycopy(d, 0, data, 0, d.length);
+    }
+
+    public void setImageTag(String tag) {
+        this.tag = tag;
     }
 
     public void setImageLocation(Double latitude, Double longtitude) {
@@ -56,4 +61,5 @@ public class ImageModel implements Serializable {
     public String getName() { return data[7]; }
     public Double getLat() { return latitude; }
     public Double getLong() { return longitude; }
+    public String getTag() { return tag; }
 }

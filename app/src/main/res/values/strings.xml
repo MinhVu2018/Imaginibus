@@ -22,11 +22,11 @@
     <string name="btn_theme_light">Light Theme</string>
     <string name="btn_layout">Change Layout</string>
     <string name="btn_detail">Detail</string>
-    <string name="btn_tag">Tag</string>
+    <string name="btn_tag">Add Tag</string>
     <string name="btn_secure">Add to Secure</string>
     <string name="btn_background">Set as Background</string>
     <string name="btn_face_detect">Show Face\'s album</string>
-
+    <string name="btn_save">Save</string>
 
     <!--Text on secure album-->
     <string name="login">Login</string>
@@ -65,4 +65,5 @@
     <string name="home_screen">Home Screen</string>
     <string name="both_screen">Both</string>
     <string name="wallpaper_restrict">Can not set video as Wallpaper</string>
+    <string name="tag_added">Tag edited</string>
 </resources>

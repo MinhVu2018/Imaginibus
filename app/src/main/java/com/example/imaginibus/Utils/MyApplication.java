@@ -29,6 +29,56 @@ public class MyApplication extends Application {
         return true;
     }
 
+    public boolean removeImage(ImageModel item) {
+        for (ImageModel imageModel : listImage) {
+            if (imageModel.getImageUrl().equals(item.getImageUrl())) {
+                listImage.remove(imageModel);
+                break;
+            }
+        }
+
+        for (AlbumModel albumModel : listAlbum) {
+            boolean removed = false;
+            if (albumModel.getAlbumName().equals(item.getAlbum())) {
+                List<ImageModel> listImageInAlbum = albumModel.getListImage();
+                for (ImageModel imageModel : listImageInAlbum) {
+                    if (imageModel.getImageUrl().equals(item.getImageUrl())) {
+                        listImageInAlbum.remove(imageModel);
+                        removed = true;
+                        break;
+                    }
+                }
+                if (listImageInAlbum.size() == 0) {
+                    listAlbum.remove(albumModel);
+                }
+
+                if (removed)
+                    break;
+            }
+        }
+
+        for (AlbumModel albumModel : listFace) {
+            boolean removed = false;
+
+            List<ImageModel> listImageInAlbum = albumModel.getListImage();
+            for (ImageModel imageModel : listImageInAlbum) {
+                if (imageModel.getImageUrl().equals(item.getImageUrl())) {
+                    listImageInAlbum.remove(imageModel);
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (listImageInAlbum.size() == 0) {
+                listFace.remove(albumModel);
+            }
+
+            if (removed)
+                break;
+
+        }
+        return true;
+    }
     public boolean setListAlbum(List<AlbumModel> listAlbum) {
         this.listAlbum = listAlbum;
         return true;
@@ -57,6 +107,15 @@ public class MyApplication extends Application {
         this.listSecure = listSecure;
         return true;
     }
+
+    public void addTag(ImageModel item, String tag) {
+        for (ImageModel image : listImage) {
+            if (image.getImageUrl().equals(item.getImageUrl())) {
+                image.setImageTag(tag);
+            }
+        }
+    }
+
     public void addImageToFavorite(ImageModel item) {
         if (listImageFavorite == null) {
             listImageFavorite = new ArrayList<>();
@@ -138,6 +197,14 @@ public class MyApplication extends Application {
         return false;
     }
 
+    public boolean isImageInList(ImageModel item) {
+        for (ImageModel image : listImage) {
+            if (image.getImageUrl().equals(item.getImageUrl()))
+                return true;
+        }
+
+        return false;
+    }
     public int getListImageSize() { return listImage.size(); }
     public int getListVideoSize() { return listVideo.size(); }
     public List<ImageModel> getListImage() { return listImage; }

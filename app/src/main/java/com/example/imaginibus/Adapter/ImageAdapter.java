@@ -22,10 +22,12 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageItemHolder> {
     List<ImageModel> items;
     Context context;
+    String title;
 
-    public ImageAdapter(@NonNull Context context, int resource, @NonNull List<ImageModel> objects) {
+    public ImageAdapter(@NonNull Context context, String title, @NonNull List<ImageModel> objects) {
         this.context = context;
         this.items = objects;
+        this.title = title;
     }
 
     public class ImageItemHolder extends RecyclerView.ViewHolder {
@@ -39,6 +41,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageItemHol
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ViewImage.class);
+                    intent.putExtra("Title", title);
                     intent.putExtra("img_path", thumb.getTag().toString());
                     intent.putExtra("list_img", (Serializable) items);
 

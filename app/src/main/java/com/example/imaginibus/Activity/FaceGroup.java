@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +17,7 @@ import com.example.imaginibus.Adapter.ListAlbumAdapter;
 import com.example.imaginibus.Model.AlbumModel;
 import com.example.imaginibus.Utils.MyApplication;
 import com.example.imaginibus.R;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class FaceGroup extends AppCompatActivity {
 
         //setup resource
         setupButton();
+
         listImageFace = ((MyApplication) this.getApplication()).getListFace();
 
         //setup adapter, view
@@ -45,6 +49,12 @@ public class FaceGroup extends AppCompatActivity {
         recyclerView.setAdapter(listAlbumAdapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        saveFaceGroup();
+    }
+
     private void setupButton() {
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -53,5 +63,14 @@ public class FaceGroup extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void saveFaceGroup() {
+        //SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.imaginibus.PREFERENCES", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        editor.putString("FACE_LIST", gson.toJson(listImageFace));
+        editor.commit();
     }
 }

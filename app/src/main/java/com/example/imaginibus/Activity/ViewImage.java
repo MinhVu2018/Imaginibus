@@ -29,6 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -54,6 +56,8 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class ViewImage extends AppCompatActivity {
     private ViewPager viewPager;
     ArrayList<ImageModel> listImage;
@@ -63,6 +67,7 @@ public class ViewImage extends AppCompatActivity {
     private TextView text_slider;
     private Timer timer;
     ImageButton btn_favorite;
+    String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +138,32 @@ public class ViewImage extends AppCompatActivity {
         }
     }
 
+    private void createAddTagDialog() {
+        AlertDialog.Builder addDialogBuilder;
+        AlertDialog addDialog;
+
+        addDialogBuilder = new AlertDialog.Builder(this);
+        final View addTagView = getLayoutInflater().inflate(R.layout.add_tag_dialog, null);
+
+        addDialogBuilder.setView(addTagView);
+        addDialog = addDialogBuilder.create();
+        addDialog.show();
+
+        EditText tag_name = (EditText) addTagView.findViewById(R.id.tag_name);
+        Button save = (Button) addTagView.findViewById(R.id.btn_save);
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tag_name_string = tag_name.getText().toString();
+                ((MyApplication) ViewImage.this.getApplication()).addTag(cur_img, tag_name_string);
+                Toast.makeText(ViewImage.this, "Tag added", LENGTH_SHORT).show();
+                addDialog.cancel();
+            }
+        });
+    }
+
     public void FullScreencall() {
         if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
             View v = this.getWindow().getDecorView();
@@ -160,6 +191,9 @@ public class ViewImage extends AppCompatActivity {
         // set adapter to view pager
         viewPager.setAdapter(imageAdapter);
         viewPager.setCurrentItem(cur_img_position);
+
+        //setup title
+        title = getIntent().getStringExtra("Title");
 
         viewPager.setPageTransformer(true, new ZoomOutTransformation());
         // set viewpager change listener
@@ -289,7 +323,11 @@ public class ViewImage extends AppCompatActivity {
 
                 //delete in external storage
                 deleteImage(new File(listImage.get(cur_img_position).getImageUrl()));
+                //delete in list image
+
+                ((MyApplication) ViewImage.this.getApplication()).removeImage(cur_img);
                 Toast.makeText(ViewImage.this, getResources().getText(R.string.delete), Toast.LENGTH_SHORT).show();
+
                 finish();
             }
         });
@@ -333,6 +371,9 @@ public class ViewImage extends AppCompatActivity {
                 return true;
             case R.id.btn_secure:
                 addImageToSecure();
+                return true;
+            case R.id.btn_add_tag:
+                createAddTagDialog();
                 return true;
         }
         return false;

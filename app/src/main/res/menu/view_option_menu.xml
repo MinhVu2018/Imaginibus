@@ -16,4 +16,9 @@
         android:id="@+id/btn_background"
         android:title="@string/btn_background"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/btn_add_tag"
+        android:title="@string/btn_tag"
+        app:showAsAction="ifRoom" />
 </menu>

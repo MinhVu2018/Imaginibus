@@ -22,6 +22,7 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -48,7 +49,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    ImageButton btn_search, btn_option, btn_gallery, btn_video, btn_location, btn_favorite, btn_secure, btn_face;
+    ImageButton btn_option, btn_gallery, btn_video, btn_location, btn_favorite, btn_secure, btn_face;
     Locale myLocale;
     String currentLang;
     Boolean isSDPresent;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     protected void onCreate(Bundle savedInstanceState) {
         //load the saved
         loadPreferences();
+
         //will hide the title
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -105,6 +107,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //set list album
         listAlbum = (RecyclerView) findViewById(R.id.list_album);
+        ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
+        listAlbum.setLayoutManager(new LinearLayoutManager(this));
+        listAlbum.setAdapter(listAlbumAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         ListAlbumAdapter listAlbumAdapter = new ListAlbumAdapter(this, R.id.list_album, ((MyApplication) this.getApplication()).getListAlbum());
         listAlbum.setLayoutManager(new LinearLayoutManager(this));
         listAlbum.setAdapter(listAlbumAdapter);
@@ -180,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btn_sync:
+                externalReadImage();
                 refresh();
             case R.id.btn_language_english:
                 setLocale("en-us");
@@ -325,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 
-
         //load layout
         ((MyApplication) this.getApplication()).currentLayout = current_layout;
     }
@@ -397,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         //set to application variable
         ((MyApplication) this.getApplication()).setListImage(imageList);
         ((MyApplication) this.getApplication()).setListAlbum(albumList);
-
         // The cursor should be freed up after use with close()
         cursor.close();
     }
