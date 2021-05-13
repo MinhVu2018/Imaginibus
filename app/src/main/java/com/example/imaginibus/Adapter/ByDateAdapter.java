@@ -52,7 +52,7 @@ public class ByDateAdapter extends RecyclerView.Adapter {
         ByDateModel item = items.get(position);
         ImageItemHolder imageItemHolder = (ImageItemHolder) holder;
 
-        ImageAdapter imageAdapter = new ImageAdapter(context, R.id.list_by_date, item.getImageList());
+        ImageAdapter imageAdapter = new ImageAdapter(context, "", item.getImageList());
 
         imageItemHolder.date.setText(item.getImageDate());
         imageItemHolder.imageListView.setLayoutManager(new GridLayoutManager(context, 3));

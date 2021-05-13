@@ -78,13 +78,13 @@ public class SecureAlbum extends AppCompatActivity implements PopupMenu.OnMenuIt
 
     private void setupAdapterGridLayout() {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
+        ImageAdapter imageAdapter = new ImageAdapter(this, "Secure", listImage);
         recyclerView.setAdapter(imageAdapter);
     }
 
     private void setupAdapterLinearLayout() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, R.id.list_image, listImage);
+        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, "Secure", listImage);
         recyclerView.setAdapter(imageLinearAdapter);
     }
 }

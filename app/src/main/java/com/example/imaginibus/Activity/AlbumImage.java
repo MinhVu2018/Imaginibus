@@ -31,7 +31,6 @@ public class AlbumImage extends AppCompatActivity implements PopupMenu.OnMenuIte
     TextView title, num_img;
     RecyclerView listImageView;
     List<ImageModel> listImage;
-    List<VideoModel> listVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +60,13 @@ public class AlbumImage extends AppCompatActivity implements PopupMenu.OnMenuIte
 
     private void setupAdapterGridLayout() {
         listImageView.setLayoutManager(new GridLayoutManager(this, 3));
-        ImageAdapter imageAdapter = new ImageAdapter(this, R.id.list_image, listImage);
+        ImageAdapter imageAdapter = new ImageAdapter(this, getIntent().getStringExtra("Title"), listImage);
         listImageView.setAdapter(imageAdapter);
     }
 
     private void setupAdapterLinearLayout() {
         listImageView.setLayoutManager(new LinearLayoutManager(this));
-        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, R.id.list_image, listImage);
+        ImageLinearAdapter imageLinearAdapter = new ImageLinearAdapter(this, getIntent().getStringExtra("Title"), listImage);
         listImageView.setAdapter(imageLinearAdapter);
     }
 
