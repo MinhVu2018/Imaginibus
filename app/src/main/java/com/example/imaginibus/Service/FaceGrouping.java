@@ -110,8 +110,13 @@ public class FaceGrouping extends IntentService {
         Bitmap bitmapTwo = BitmapFactory.decodeFile(imageTwo.getImageUrl());
 
         //crop the face
-        bitmapOne = Bitmap.createBitmap(bitmapOne, imgOne.left, imgOne.top, imgOne.right - imgOne.left, imgOne.bottom - imgOne.top);
-        bitmapTwo = Bitmap.createBitmap(bitmapTwo, imgTwo.left, imgTwo.top, imgTwo.right - imgTwo.left, imgTwo.bottom - imgTwo.top);
+        try {
+            bitmapOne = Bitmap.createBitmap(bitmapOne, imgOne.left, imgOne.top, imgOne.right - imgOne.left, imgOne.bottom - imgOne.top);
+            bitmapTwo = Bitmap.createBitmap(bitmapTwo, imgTwo.left, imgTwo.top, imgTwo.right - imgTwo.left, imgTwo.bottom - imgTwo.top);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
         byte[] buffOne;
         byte[] buffTwo;
 

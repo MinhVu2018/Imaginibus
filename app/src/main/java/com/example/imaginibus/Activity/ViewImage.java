@@ -55,6 +55,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import su.rbv.folderpicker.FolderPicker;
+
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class ViewImage extends AppCompatActivity {
@@ -147,6 +148,13 @@ public class ViewImage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         MyApplication.FullScreenCall(this);
+
+        handleIntentFilter();
+        //setup image adapter
+        setUp();
+
+        //setup button
+        setupButton();
     }
 
     @Override

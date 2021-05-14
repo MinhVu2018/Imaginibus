@@ -62,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //get all image and set to global variable
+        externalReadImage();
+        externalReadVideo();
+
         //load the saved
         loadPreferences();
 
@@ -99,10 +103,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //check for sd card
         isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-
-        //get all image and set to global variable
-        externalReadImage();
-        externalReadVideo();
 
         //set list album
         listAlbum = (RecyclerView) findViewById(R.id.list_album);
@@ -219,7 +219,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     Intent intent = new Intent(MainActivity.this, FaceGroup.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "Face grouping is working, please comeback later!", Toast.LENGTH_SHORT).show();
+                    if (!isMyServiceRunning(FaceDetection.class) && !isMyServiceRunning(FaceGrouping.class)) {
+                        Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
+                        startService(faceService);
+                    } else {
+                        Toast.makeText(this, "Face grouping is working, please comeback later!", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case R.id.btn_camera:
@@ -318,11 +323,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (face_list != null) {
             Type type = new TypeToken<List<AlbumModel>>(){}.getType();
             ((MyApplication) this.getApplication()).setListFace(gson.fromJson(face_list, type));
-        } else {
-            if (!isMyServiceRunning(FaceDetection.class) && !isMyServiceRunning(FaceGrouping.class)) {
-                Intent faceService = new Intent(MainActivity.this, FaceDetection.class);
-                startService(faceService);
-            }
         }
 
         //load theme

@@ -125,6 +125,13 @@ public class ViewVideo extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         MyApplication.FullScreenCall(this);
+
+        handleIntentFilter();
+        // setup video adapter
+        setUp();
+
+        //setup buttons
+        SetUpButton();
     }
 
     @Override
